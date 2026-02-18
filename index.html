@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bachelor Luxe & Management | EAC École des Arts et Communication</title>
+  <meta name="description" content="Rejoignez le Bachelor Luxe & Management de l'EAC et devenez un acteur clé de l'industrie du luxe. Formation d'excellence, réseau premium, débouchés internationaux." />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+
+  <style>
+    /* ─── RESET & BASE ─────────────────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Montserrat', sans-serif;
+      background: #0c0c0c;
+      color: #f0ebe3;
+      line-height: 1.7;
+      overflow-x: hidden;
+    }
+
+    /* ─── VARIABLES ────────────────────────────────────────── */
+    :root {
+      --gold:       #c9a84c;
+      --gold-light: #e8cc82;
+      --gold-dark:  #9a7c35;
+      --noir:       #0c0c0c;
+      --noir-2:     #141414;
+      --noir-3:     #1c1c1c;
+      --crème:      #f5f0e8;
+      --gris:       #8a8a8a;
+      --gris-clair: #d0cbc4;
+      --blanc:      #ffffff;
+    }
+
+    /* ─── UTILITAIRES ──────────────────────────────────────── */
+    .container { max-width: 1160px; margin: 0 auto; padding: 0 24px; }
+    .gold { color: var(--gold); }
+    .section-label {
+      font-family: 'Montserrat', sans-serif;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--gold);
+      display: block;
+      margin-bottom: 16px;
+    }
+    h2.section-title {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(28px, 4vw, 48px);
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--crème);
+      margin-bottom: 20px;
+    }
+    .section-subtitle {
+      font-size: 16px;
+      color: var(--gris-clair);
+      max-width: 620px;
+      line-height: 1.8;
+    }
+    .divider-gold {
+      width: 60px;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      margin: 24px 0;
+    }
+    .divider-gold.center { margin: 24px auto; }
+
+    /* ─── NAVIGATION ───────────────────────────────────────── */
+    .nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 1000;
+      padding: 0 40px;
+      height: 72px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: rgba(12,12,12,0.92);
+      backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      transition: background 0.3s;
+    }
+    .nav-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      color: var(--crème);
+      text-decoration: none;
+    }
+    .nav-logo span { color: var(--gold); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris-clair);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .nav-links a:hover { color: var(--gold); }
+    .nav-cta {
+      background: var(--gold);
+      color: var(--noir) !important;
+      padding: 10px 24px;
+      font-size: 11px !important;
+      font-weight: 700 !important;
+      letter-spacing: 2px !important;
+      text-transform: uppercase;
+      border-radius: 2px;
+      transition: background 0.3s !important;
+    }
+    .nav-cta:hover { background: var(--gold-light) !important; color: var(--noir) !important; }
+
+    /* Hamburger (mobile) */
+    .nav-hamburger { display: none; flex-direction: column; gap: 5px; cursor: pointer; background: none; border: none; }
+    .nav-hamburger span { width: 24px; height: 2px; background: var(--crème); transition: 0.3s; display: block; }
+
+    @media (max-width: 900px) {
+      .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
+    }
+
+    /* ─── HERO ─────────────────────────────────────────────── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+      padding-top: 72px;
+    }
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(135deg, rgba(12,12,12,0.97) 0%, rgba(12,12,12,0.75) 60%, rgba(12,12,12,0.92) 100%),
+        url('https://images.unsplash.com/photo-1490481651871-ab68de25d43d?auto=format&fit=crop&w=1600&q=80') center/cover no-repeat;
+    }
+    /* Gold particle accent */
+    .hero-bg::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 70% 60% at 75% 50%, rgba(201,168,76,0.08) 0%, transparent 70%);
+    }
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      max-width: 760px;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      border: 1px solid rgba(201,168,76,0.4);
+      padding: 8px 20px;
+      margin-bottom: 40px;
+      border-radius: 2px;
+    }
+    .hero-badge-dot { width: 6px; height: 6px; border-radius: 50%; background: var(--gold); }
+    .hero-badge span {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+    }
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(38px, 6vw, 78px);
+      font-weight: 700;
+      line-height: 1.08;
+      color: var(--crème);
+      margin-bottom: 28px;
+    }
+    .hero h1 em {
+      font-style: italic;
+      color: var(--gold);
+    }
+    .hero-desc {
+      font-size: 17px;
+      color: var(--gris-clair);
+      max-width: 560px;
+      line-height: 1.8;
+      margin-bottom: 52px;
+    }
+    .hero-ctas { display: flex; gap: 16px; flex-wrap: wrap; }
+    .btn-primary {
+      display: inline-block;
+      background: var(--gold);
+      color: var(--noir);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 18px 40px;
+      border-radius: 2px;
+      text-decoration: none;
+      border: none;
+      cursor: pointer;
+      transition: background 0.3s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--gold-light); transform: translateY(-1px); }
+    .btn-outline {
+      display: inline-block;
+      background: transparent;
+      color: var(--crème);
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      padding: 17px 40px;
+      border-radius: 2px;
+      border: 1px solid rgba(240,235,227,0.35);
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.3s, color 0.3s;
+    }
+    .btn-outline:hover { border-color: var(--gold); color: var(--gold); }
+    .hero-stats {
+      position: absolute;
+      bottom: 60px;
+      left: 0; right: 0;
+      z-index: 2;
+    }
+    .hero-stats-inner {
+      max-width: 1160px;
+      margin: 0 auto;
+      padding: 0 24px;
+      display: flex;
+      gap: 60px;
+    }
+    .hero-stat-item { }
+    .hero-stat-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 42px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+    }
+    .hero-stat-label {
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-top: 6px;
+    }
+    .hero-scroll {
+      position: absolute;
+      bottom: 30px;
+      right: 40px;
+      z-index: 2;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 10px;
+    }
+    .hero-scroll span {
+      font-size: 10px;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gris);
+      writing-mode: vertical-rl;
+    }
+    .hero-scroll-line {
+      width: 1px;
+      height: 60px;
+      background: linear-gradient(to bottom, var(--gold), transparent);
+      animation: scrollLine 2s ease-in-out infinite;
+    }
+    @keyframes scrollLine {
+      0%, 100% { opacity: 1; transform: scaleY(1); transform-origin: top; }
+      50% { opacity: 0.4; }
+    }
+
+    /* ─── CHIFFRES CLÉS ────────────────────────────────────── */
+    .stats-band {
+      background: var(--noir-2);
+      border-top: 1px solid rgba(201,168,76,0.15);
+      border-bottom: 1px solid rgba(201,168,76,0.15);
+      padding: 64px 0;
+    }
+    .stats-band-inner {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 40px;
+    }
+    .stat-card {
+      text-align: center;
+      padding: 32px 20px;
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 4px;
+      background: rgba(201,168,76,0.02);
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .stat-card:hover {
+      border-color: rgba(201,168,76,0.3);
+      background: rgba(201,168,76,0.05);
+    }
+    .stat-card-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 52px;
+      font-weight: 700;
+      color: var(--gold);
+      line-height: 1;
+      margin-bottom: 12px;
+    }
+    .stat-card-label {
+      font-size: 12px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris-clair);
+    }
+    @media (max-width: 768px) {
+      .stats-band-inner { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 480px) {
+      .stats-band-inner { grid-template-columns: 1fr; }
+    }
+
+    /* ─── PROGRAMME ────────────────────────────────────────── */
+    .section { padding: 120px 0; }
+    .programme-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+      margin-top: 72px;
+    }
+    .programme-image-wrapper {
+      position: relative;
+    }
+    .programme-image {
+      width: 100%;
+      aspect-ratio: 4/5;
+      object-fit: cover;
+      border-radius: 4px;
+      display: block;
+    }
+    .programme-image-accent {
+      position: absolute;
+      bottom: -20px;
+      right: -20px;
+      width: 180px;
+      height: 180px;
+      border: 2px solid var(--gold);
+      border-radius: 4px;
+      opacity: 0.3;
+      z-index: -1;
+    }
+    .programme-badge {
+      position: absolute;
+      top: 32px;
+      left: -32px;
+      background: var(--gold);
+      color: var(--noir);
+      padding: 20px 24px;
+      border-radius: 4px;
+      text-align: center;
+    }
+    .programme-badge-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 32px;
+      font-weight: 700;
+      line-height: 1;
+    }
+    .programme-badge-text {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+    .programme-features { margin-top: 40px; display: flex; flex-direction: column; gap: 20px; }
+    .programme-feature {
+      display: flex;
+      align-items: flex-start;
+      gap: 16px;
+    }
+    .programme-feature-icon {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      font-size: 18px;
+    }
+    .programme-feature-title {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--crème);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .programme-feature-desc { font-size: 13px; color: var(--gris); line-height: 1.6; }
+    @media (max-width: 900px) {
+      .programme-grid { grid-template-columns: 1fr; gap: 60px; }
+      .programme-badge { left: 16px; top: 16px; }
+    }
+
+    /* ─── SPÉCIALISATIONS ──────────────────────────────────── */
+    .specs-section { background: var(--noir-2); }
+    .specs-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 2px;
+      margin-top: 72px;
+    }
+    .spec-card {
+      background: var(--noir-3);
+      padding: 48px 36px;
+      position: relative;
+      overflow: hidden;
+      cursor: default;
+      transition: background 0.4s;
+    }
+    .spec-card::before {
+      content: '';
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      height: 2px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-light));
+      transform: scaleX(0);
+      transition: transform 0.4s;
+      transform-origin: left;
+    }
+    .spec-card:hover { background: #202020; }
+    .spec-card:hover::before { transform: scaleX(1); }
+    .spec-number {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      font-weight: 700;
+      color: rgba(201,168,76,0.08);
+      position: absolute;
+      top: 16px; right: 24px;
+      line-height: 1;
+    }
+    .spec-icon { font-size: 32px; margin-bottom: 24px; }
+    .spec-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 22px;
+      font-weight: 600;
+      color: var(--crème);
+      margin-bottom: 16px;
+    }
+    .spec-desc { font-size: 14px; color: var(--gris); line-height: 1.7; margin-bottom: 24px; }
+    .spec-tags { display: flex; flex-wrap: wrap; gap: 8px; }
+    .spec-tag {
+      font-size: 10px;
+      font-weight: 600;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--gold);
+      border: 1px solid rgba(201,168,76,0.3);
+      padding: 5px 12px;
+      border-radius: 2px;
+    }
+    @media (max-width: 900px) { .specs-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .specs-grid { grid-template-columns: 1fr; } }
+
+    /* ─── DÉBOUCHÉS ────────────────────────────────────────── */
+    .debouches-header { text-align: center; }
+    .debouches-header .section-subtitle { margin: 0 auto; }
+    .debouches-header .divider-gold { margin: 24px auto; }
+    .debouches-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 2px;
+      margin-top: 72px;
+    }
+    .debouche-item {
+      background: var(--noir-2);
+      padding: 40px;
+      display: flex;
+      align-items: flex-start;
+      gap: 24px;
+      transition: background 0.3s;
+    }
+    .debouche-item:hover { background: var(--noir-3); }
+    .debouche-icon-wrap {
+      width: 56px;
+      height: 56px;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      flex-shrink: 0;
+    }
+    .debouche-title {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--crème);
+      margin-bottom: 8px;
+    }
+    .debouche-desc { font-size: 13px; color: var(--gris); line-height: 1.7; }
+    @media (max-width: 700px) { .debouches-grid { grid-template-columns: 1fr; } }
+
+    /* ─── TÉMOIGNAGES ──────────────────────────────────────── */
+    .testimonials-section { background: var(--noir-2); overflow: hidden; }
+    .testimonials-track {
+      display: flex;
+      gap: 32px;
+      margin-top: 72px;
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+      scrollbar-width: none;
+      padding-bottom: 8px;
+    }
+    .testimonials-track::-webkit-scrollbar { display: none; }
+    .testimonial-card {
+      flex: 0 0 380px;
+      background: var(--noir-3);
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 4px;
+      padding: 48px 40px;
+      scroll-snap-align: start;
+      position: relative;
+      transition: border-color 0.3s;
+    }
+    .testimonial-card:hover { border-color: rgba(201,168,76,0.3); }
+    .testimonial-quote {
+      font-family: 'Playfair Display', serif;
+      font-size: 64px;
+      color: var(--gold);
+      opacity: 0.2;
+      line-height: 0.5;
+      margin-bottom: 24px;
+    }
+    .testimonial-text {
+      font-size: 15px;
+      font-style: italic;
+      color: var(--gris-clair);
+      line-height: 1.8;
+      margin-bottom: 36px;
+    }
+    .testimonial-author { display: flex; align-items: center; gap: 16px; }
+    .testimonial-avatar {
+      width: 52px;
+      height: 52px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, var(--gold-dark), var(--gold));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 700;
+      color: var(--noir);
+      flex-shrink: 0;
+    }
+    .testimonial-name {
+      font-size: 14px;
+      font-weight: 700;
+      color: var(--crème);
+      margin-bottom: 2px;
+    }
+    .testimonial-role { font-size: 12px; color: var(--gold); letter-spacing: 0.5px; }
+    .testimonials-nav {
+      display: flex;
+      gap: 12px;
+      margin-top: 48px;
+    }
+    .testimonials-nav button {
+      width: 48px;
+      height: 48px;
+      border: 1px solid rgba(201,168,76,0.3);
+      background: transparent;
+      color: var(--gold);
+      font-size: 20px;
+      border-radius: 2px;
+      cursor: pointer;
+      transition: background 0.3s, border-color 0.3s;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .testimonials-nav button:hover { background: rgba(201,168,76,0.1); border-color: var(--gold); }
+
+    /* ─── PARTENAIRES ──────────────────────────────────────── */
+    .partenaires-section { padding: 80px 0; }
+    .partenaires-header { text-align: center; margin-bottom: 60px; }
+    .partenaires-logos {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+    .partenaire-logo {
+      border: 1px solid rgba(201,168,76,0.15);
+      padding: 20px 36px;
+      border-radius: 2px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gris);
+      transition: border-color 0.3s, color 0.3s;
+      white-space: nowrap;
+    }
+    .partenaire-logo:hover { border-color: rgba(201,168,76,0.5); color: var(--gold-light); }
+
+    /* ─── CANDIDATURE / FORM ───────────────────────────────── */
+    .candidature-section {
+      background: var(--noir-2);
+      position: relative;
+      overflow: hidden;
+    }
+    .candidature-section::before {
+      content: '';
+      position: absolute;
+      top: -200px; right: -200px;
+      width: 500px;
+      height: 500px;
+      border-radius: 50%;
+      background: radial-gradient(circle, rgba(201,168,76,0.05), transparent);
+    }
+    .candidature-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: start;
+    }
+    .candidature-info h2 { margin-bottom: 24px; }
+    .candidature-checklist { margin-top: 40px; display: flex; flex-direction: column; gap: 16px; }
+    .candidature-check {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      font-size: 14px;
+      color: var(--gris-clair);
+    }
+    .candidature-check-icon {
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      background: rgba(201,168,76,0.1);
+      border: 1px solid rgba(201,168,76,0.3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 13px;
+      flex-shrink: 0;
+    }
+    .form-card {
+      background: var(--noir-3);
+      border: 1px solid rgba(201,168,76,0.12);
+      border-radius: 4px;
+      padding: 52px 44px;
+      position: relative;
+      z-index: 1;
+    }
+    .form-card h3 {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--crème);
+      margin-bottom: 8px;
+    }
+    .form-card p { font-size: 13px; color: var(--gris); margin-bottom: 36px; }
+    .form-group { margin-bottom: 20px; }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .form-group label {
+      display: block;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--gris);
+      margin-bottom: 8px;
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      width: 100%;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(201,168,76,0.15);
+      border-radius: 2px;
+      padding: 14px 18px;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 14px;
+      color: var(--crème);
+      outline: none;
+      transition: border-color 0.3s, background 0.3s;
+      -webkit-appearance: none;
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: var(--gris); }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color: var(--gold);
+      background: rgba(201,168,76,0.04);
+    }
+    .form-group select option { background: var(--noir-3); color: var(--crème); }
+    .form-group textarea { resize: vertical; min-height: 100px; }
+    .form-consent {
+      display: flex;
+      align-items: flex-start;
+      gap: 12px;
+      margin-bottom: 28px;
+    }
+    .form-consent input[type="checkbox"] {
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+      margin-top: 2px;
+      accent-color: var(--gold);
+    }
+    .form-consent label {
+      font-size: 12px;
+      color: var(--gris);
+      line-height: 1.6;
+      cursor: pointer;
+    }
+    .form-consent label a { color: var(--gold); text-decoration: underline; }
+    .form-submit { width: 100%; }
+    @media (max-width: 900px) {
+      .candidature-grid { grid-template-columns: 1fr; gap: 60px; }
+      .form-row { grid-template-columns: 1fr; }
+      .form-card { padding: 40px 28px; }
+    }
+
+    /* ─── EQUIPE PÉDAGOGIQUE ───────────────────────────────── */
+    .equipe-section { }
+    .equipe-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 32px;
+      margin-top: 72px;
+    }
+    .prof-card {
+      background: var(--noir-2);
+      border: 1px solid rgba(201,168,76,0.08);
+      border-radius: 4px;
+      overflow: hidden;
+      transition: border-color 0.3s, transform 0.3s;
+    }
+    .prof-card:hover { border-color: rgba(201,168,76,0.25); transform: translateY(-4px); }
+    .prof-photo {
+      width: 100%;
+      aspect-ratio: 3/2;
+      object-fit: cover;
+      background: var(--noir-3);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 56px;
+    }
+    .prof-info { padding: 28px 24px; }
+    .prof-name {
+      font-family: 'Playfair Display', serif;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--crème);
+      margin-bottom: 4px;
+    }
+    .prof-role { font-size: 12px; color: var(--gold); letter-spacing: 1px; font-weight: 600; text-transform: uppercase; margin-bottom: 12px; }
+    .prof-desc { font-size: 13px; color: var(--gris); line-height: 1.6; }
+    @media (max-width: 900px) { .equipe-grid { grid-template-columns: repeat(2, 1fr); } }
+    @media (max-width: 600px) { .equipe-grid { grid-template-columns: 1fr; } }
+
+    /* ─── FAQ ──────────────────────────────────────────────── */
+    .faq-section { background: var(--noir-2); }
+    .faq-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 0;
+      margin-top: 72px;
+      border: 1px solid rgba(201,168,76,0.1);
+      border-radius: 4px;
+      overflow: hidden;
+    }
+    .faq-item {
+      border-bottom: 1px solid rgba(201,168,76,0.08);
+      border-right: 1px solid rgba(201,168,76,0.08);
+    }
+    .faq-item:nth-child(even) { border-right: none; }
+    .faq-question {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 28px 32px;
+      text-align: left;
+      font-family: 'Montserrat', sans-serif;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--crème);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 16px;
+      transition: color 0.3s;
+    }
+    .faq-question:hover { color: var(--gold); }
+    .faq-question-icon {
+      width: 28px;
+      height: 28px;
+      border: 1px solid rgba(201,168,76,0.3);
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--gold);
+      font-size: 18px;
+      flex-shrink: 0;
+      transition: transform 0.3s, background 0.3s;
+    }
+    .faq-answer {
+      padding: 0 32px;
+      font-size: 13px;
+      color: var(--gris);
+      line-height: 1.8;
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s ease, padding 0.3s;
+    }
+    .faq-item.open .faq-answer { max-height: 200px; padding-bottom: 28px; }
+    .faq-item.open .faq-question-icon { transform: rotate(45deg); background: rgba(201,168,76,0.1); }
+    @media (max-width: 768px) {
+      .faq-grid { grid-template-columns: 1fr; }
+      .faq-item { border-right: none; }
+    }
+
+    /* ─── URGENCY BANNER ───────────────────────────────────── */
+    .urgency-banner {
+      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold));
+      background-size: 300% 100%;
+      animation: shimmer 6s ease infinite;
+      padding: 20px 0;
+      text-align: center;
+    }
+    @keyframes shimmer {
+      0%, 100% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+    }
+    .urgency-text {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--noir);
+    }
+    .urgency-text strong { font-size: 15px; }
+
+    /* ─── FOOTER ───────────────────────────────────────────── */
+    .footer {
+      background: #080808;
+      border-top: 1px solid rgba(201,168,76,0.12);
+      padding: 80px 0 40px;
+    }
+    .footer-grid {
+      display: grid;
+      grid-template-columns: 2fr 1fr 1fr 1fr;
+      gap: 60px;
+      margin-bottom: 60px;
+    }
+    .footer-brand-logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 24px;
+      font-weight: 700;
+      color: var(--crème);
+      letter-spacing: 2px;
+      margin-bottom: 16px;
+    }
+    .footer-brand-logo span { color: var(--gold); }
+    .footer-brand-desc { font-size: 13px; color: var(--gris); line-height: 1.8; margin-bottom: 28px; }
+    .footer-social { display: flex; gap: 12px; }
+    .footer-social a {
+      width: 40px;
+      height: 40px;
+      border: 1px solid rgba(201,168,76,0.2);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 16px;
+      text-decoration: none;
+      transition: border-color 0.3s, background 0.3s;
+    }
+    .footer-social a:hover { border-color: var(--gold); background: rgba(201,168,76,0.08); }
+    .footer-col-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--gold);
+      margin-bottom: 24px;
+    }
+    .footer-col ul { list-style: none; display: flex; flex-direction: column; gap: 12px; }
+    .footer-col ul a {
+      font-size: 13px;
+      color: var(--gris);
+      text-decoration: none;
+      transition: color 0.3s;
+    }
+    .footer-col ul a:hover { color: var(--crème); }
+    .footer-bottom {
+      border-top: 1px solid rgba(255,255,255,0.06);
+      padding-top: 32px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-copy { font-size: 12px; color: var(--gris); }
+    .footer-legal { display: flex; gap: 24px; }
+    .footer-legal a { font-size: 12px; color: var(--gris); text-decoration: none; transition: color 0.3s; }
+    .footer-legal a:hover { color: var(--gold); }
+    @media (max-width: 900px) {
+      .footer-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (max-width: 540px) {
+      .footer-grid { grid-template-columns: 1fr; gap: 40px; }
+      .footer-bottom { flex-direction: column; text-align: center; }
+    }
+
+    /* ─── STICKY CTA MOBILE ────────────────────────────────── */
+    .sticky-cta-mobile {
+      display: none;
+      position: fixed;
+      bottom: 0; left: 0; right: 0;
+      z-index: 999;
+      background: var(--noir-2);
+      border-top: 1px solid rgba(201,168,76,0.2);
+      padding: 14px 20px;
+    }
+    .sticky-cta-mobile .btn-primary { width: 100%; text-align: center; }
+    @media (max-width: 640px) { .sticky-cta-mobile { display: block; } }
+
+    /* ─── ANIMATIONS ───────────────────────────────────────── */
+    .fade-in {
+      opacity: 0;
+      transform: translateY(30px);
+      transition: opacity 0.7s ease, transform 0.7s ease;
+    }
+    .fade-in.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ─── SMOOTH SCROLL TARGET OFFSET ─────────────────────── */
+    section[id] { scroll-margin-top: 80px; }
+  </style>
+</head>
+<body>
+
+  <!-- ═══════════════════ NAVIGATION ═══════════════════ -->
+  <nav class="nav" id="nav">
+    <a href="#" class="nav-logo">EAC <span>|</span> Luxe</a>
+    <ul class="nav-links">
+      <li><a href="#programme">Programme</a></li>
+      <li><a href="#specialisations">Spécialisations</a></li>
+      <li><a href="#debouches">Débouchés</a></li>
+      <li><a href="#temoignages">Témoignages</a></li>
+      <li><a href="#candidature" class="nav-cta">Candidater</a></li>
+    </ul>
+    <button class="nav-hamburger" aria-label="Menu">
+      <span></span><span></span><span></span>
+    </button>
+  </nav>
+
+  <!-- ═══════════════════ HERO ═══════════════════════════ -->
+  <section class="hero" id="accueil">
+    <div class="hero-bg"></div>
+    <div class="container">
+      <div class="hero-content fade-in">
+        <div class="hero-badge">
+          <span class="hero-badge-dot"></span>
+          <span>Candidatures ouvertes — Rentrée 2025</span>
+        </div>
+        <h1>
+          Maîtrisez l'univers<br />
+          du <em>Luxe</em> &amp;<br />
+          du Management
+        </h1>
+        <p class="hero-desc">
+          Une formation d'excellence en 3 ans au cœur de l'industrie du luxe.
+          Développez votre expertise, construisez votre réseau et accédez aux maisons
+          les plus prestigieuses du monde.
+        </p>
+        <div class="hero-ctas">
+          <a href="#candidature" class="btn-primary">Déposer ma candidature</a>
+          <a href="#programme" class="btn-outline">Découvrir le programme</a>
+        </div>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hero-stats-inner">
+        <div class="hero-stat-item">
+          <div class="hero-stat-number">94%</div>
+          <div class="hero-stat-label">Taux d'insertion</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-number">80+</div>
+          <div class="hero-stat-label">Partenaires luxe</div>
+        </div>
+        <div class="hero-stat-item">
+          <div class="hero-stat-number">3</div>
+          <div class="hero-stat-label">Ans de formation</div>
+        </div>
+      </div>
+    </div>
+    <div class="hero-scroll">
+      <div class="hero-scroll-line"></div>
+      <span>Scroll</span>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ BANNIÈRE URGENCE ══════════════ -->
+  <div class="urgency-banner">
+    <p class="urgency-text">
+      ⧫&nbsp;&nbsp;Journée Portes Ouvertes —
+      <strong>15 mars 2025</strong>
+      &nbsp;·&nbsp; Places limitées — Inscrivez-vous maintenant &nbsp;&nbsp;⧫
+    </p>
+  </div>
+
+  <!-- ═══════════════════ STATISTIQUES ═════════════════ -->
+  <section class="stats-band">
+    <div class="container">
+      <div class="stats-band-inner">
+        <div class="stat-card fade-in">
+          <div class="stat-card-number">20+</div>
+          <div class="stat-card-label">Années d'expertise</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-card-number">2 500+</div>
+          <div class="stat-card-label">Alumni actifs</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-card-number">40+</div>
+          <div class="stat-card-label">Intervenants professionnels</div>
+        </div>
+        <div class="stat-card fade-in">
+          <div class="stat-card-number">15+</div>
+          <div class="stat-card-label">Pays partenaires</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PROGRAMME ════════════════════ -->
+  <section class="section" id="programme">
+    <div class="container">
+      <div class="programme-grid">
+        <div class="programme-image-wrapper fade-in">
+          <img
+            src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?auto=format&fit=crop&w=800&q=80"
+            alt="Étudiants bachelor luxe EAC"
+            class="programme-image"
+          />
+          <div class="programme-image-accent"></div>
+          <div class="programme-badge">
+            <div class="programme-badge-number">BAC+3</div>
+            <div class="programme-badge-text">Grade reconnu</div>
+          </div>
+        </div>
+        <div class="fade-in">
+          <span class="section-label">Notre Programme</span>
+          <h2 class="section-title">Un parcours<br />façonné pour<br />l'excellence</h2>
+          <div class="divider-gold"></div>
+          <p class="section-subtitle">
+            Le Bachelor Luxe & Management de l'EAC forme les futurs professionnels
+            capables de décrypter, créer et piloter les stratégies des grandes maisons
+            de luxe, de la mode à la haute joaillerie.
+          </p>
+          <div class="programme-features">
+            <div class="programme-feature">
+              <div class="programme-feature-icon">🎓</div>
+              <div>
+                <div class="programme-feature-title">Pédagogie par l'expérience</div>
+                <div class="programme-feature-desc">Études de cas réels, projets avec des maisons partenaires, visites privées en coulisses.</div>
+              </div>
+            </div>
+            <div class="programme-feature">
+              <div class="programme-feature-icon">🌍</div>
+              <div>
+                <div class="programme-feature-title">Mobilité internationale</div>
+                <div class="programme-feature-desc">Semestre à l'étranger dans nos universités partenaires à Milan, Londres, New York ou Tokyo.</div>
+              </div>
+            </div>
+            <div class="programme-feature">
+              <div class="programme-feature-icon">💼</div>
+              <div>
+                <div class="programme-feature-title">24 semaines de stages</div>
+                <div class="programme-feature-desc">Immersion professionnelle obligatoire au sein des maisons les plus emblématiques du secteur.</div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ SPÉCIALISATIONS ══════════════ -->
+  <section class="section specs-section" id="specialisations">
+    <div class="container">
+      <span class="section-label">Voies d'excellence</span>
+      <h2 class="section-title">3 Spécialisations<br />pour votre ambition</h2>
+    </div>
+    <div class="container" style="max-width:100%;padding:0;">
+      <div class="specs-grid">
+        <div class="spec-card fade-in">
+          <span class="spec-number">01</span>
+          <div class="spec-icon">💎</div>
+          <h3 class="spec-title">Haute Joaillerie & Horlogerie</h3>
+          <p class="spec-desc">
+            Maîtrisez l'art de la rareté : histoire des maisons, gemmologie appliquée,
+            retail d'exception et clientèle HNWI.
+          </p>
+          <div class="spec-tags">
+            <span class="spec-tag">Gemmologie</span>
+            <span class="spec-tag">Retail Luxe</span>
+            <span class="spec-tag">HNWI</span>
+          </div>
+        </div>
+        <div class="spec-card fade-in">
+          <span class="spec-number">02</span>
+          <div class="spec-icon">👗</div>
+          <h3 class="spec-title">Mode & Lifestyle de Luxe</h3>
+          <p class="spec-desc">
+            De la création à la distribution : marketing de la mode, merchandising,
+            événementiel et communication luxe à l'ère digitale.
+          </p>
+          <div class="spec-tags">
+            <span class="spec-tag">Fashion Marketing</span>
+            <span class="spec-tag">Digital Luxe</span>
+            <span class="spec-tag">Événementiel</span>
+          </div>
+        </div>
+        <div class="spec-card fade-in">
+          <span class="spec-number">03</span>
+          <div class="spec-icon">🏨</div>
+          <h3 class="spec-title">Hôtellerie & Art de Vivre</h3>
+          <p class="spec-desc">
+            Pilotez l'excellence de l'accueil : gestion des palaces, gastronomie étoilée,
+            oenotourisme et expériences ultra-premium.
+          </p>
+          <div class="spec-tags">
+            <span class="spec-tag">Hospitality</span>
+            <span class="spec-tag">Gastronomie</span>
+            <span class="spec-tag">Tourisme Luxe</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ DÉBOUCHÉS ════════════════════ -->
+  <section class="section" id="debouches" style="background:#0c0c0c;">
+    <div class="container">
+      <div class="debouches-header fade-in">
+        <span class="section-label">Perspectives de carrière</span>
+        <h2 class="section-title">Des débouchés à<br />la hauteur de vos ambitions</h2>
+        <div class="divider-gold center"></div>
+        <p class="section-subtitle">
+          Nos diplômés rejoignent les plus grandes maisons mondiales dès leur sortie d'école,
+          avec un salaire médian d'entrée de <span class="gold">36 000 €/an</span>.
+        </p>
+      </div>
+      <div class="debouches-grid">
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">🛍️</div>
+          <div>
+            <div class="debouche-title">Responsable Boutique Luxe</div>
+            <div class="debouche-desc">Pilotez les performances commerciales d'une boutique de prestige, gérez les équipes de vente et l'expérience client.</div>
+          </div>
+        </div>
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">📣</div>
+          <div>
+            <div class="debouche-title">Chef de Projet Communication</div>
+            <div class="debouche-desc">Développez et déployez les stratégies de communication omnicanale des maisons de luxe à l'échelle internationale.</div>
+          </div>
+        </div>
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">📊</div>
+          <div>
+            <div class="debouche-title">Brand Manager</div>
+            <div class="debouche-desc">Orchestrez l'identité de marque, la stratégie produit et le positionnement d'une maison dans un marché ultra-sélectif.</div>
+          </div>
+        </div>
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">🌐</div>
+          <div>
+            <div class="debouche-title">Digital Luxe Manager</div>
+            <div class="debouche-desc">Pilotez la transformation digitale des maisons de luxe : e-commerce, social media, influence et expériences phygitales.</div>
+          </div>
+        </div>
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">✈️</div>
+          <div>
+            <div class="debouche-title">Travel Retail Manager</div>
+            <div class="debouche-desc">Gérez la distribution premium dans les aéroports et les espaces duty-free à travers les hubs internationaux.</div>
+          </div>
+        </div>
+        <div class="debouche-item fade-in">
+          <div class="debouche-icon-wrap">🎪</div>
+          <div>
+            <div class="debouche-title">Chargé d'Événementiel Luxe</div>
+            <div class="debouche-desc">Concevez et coordonnez les événements privés, défilés, lancements de produits et expériences VIP des grandes maisons.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ TÉMOIGNAGES ══════════════════ -->
+  <section class="section testimonials-section" id="temoignages">
+    <div class="container">
+      <span class="section-label">Ils nous font confiance</span>
+      <h2 class="section-title">La parole à<br />nos diplômés</h2>
+      <div class="testimonials-track" id="testimonialsTrack">
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">
+            "L'EAC m'a offert bien plus qu'une formation : un réseau, une culture du luxe
+            et une vision stratégique qui m'ont immédiatement différencié lors de mes entretiens
+            chez Chanel."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">AS</div>
+            <div>
+              <div class="testimonial-name">Amélie Sinclair</div>
+              <div class="testimonial-role">Brand Manager chez Chanel — Promo 2022</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">
+            "Grâce aux intervenants professionnels et aux projets en entreprise, j'ai pu
+            intégrer Louis Vuitton dès la fin de mes études. Le Bachelor Luxe EAC ouvre
+            vraiment des portes extraordinaires."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">TM</div>
+            <div>
+              <div class="testimonial-name">Thomas Mercier</div>
+              <div class="testimonial-role">Retail Excellence Manager, LVMH — Promo 2021</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">
+            "Le semestre à Milan a été une révélation. Confrontée à l'industrie de la mode
+            italienne, j'ai développé une sensibilité unique que mes collègues remarquent
+            chaque jour."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">CL</div>
+            <div>
+              <div class="testimonial-name">Clara Lefèvre</div>
+              <div class="testimonial-role">Chef de Produit Mode, Kering — Promo 2023</div>
+            </div>
+          </div>
+        </div>
+        <div class="testimonial-card">
+          <div class="testimonial-quote">"</div>
+          <p class="testimonial-text">
+            "La pédagogie par projets m'a appris à prendre des décisions dans des
+            conditions réelles. Aujourd'hui, je pilote la stratégie digitale d'une maison
+            de haute joaillerie depuis Londres."
+          </p>
+          <div class="testimonial-author">
+            <div class="testimonial-avatar">JD</div>
+            <div>
+              <div class="testimonial-name">Jules Darmont</div>
+              <div class="testimonial-role">Digital Strategy Lead, Cartier — Promo 2020</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonials-nav">
+        <button id="prevBtn" aria-label="Précédent">&#8592;</button>
+        <button id="nextBtn" aria-label="Suivant">&#8594;</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ ÉQUIPE PÉDAGOGIQUE ═══════════ -->
+  <section class="section equipe-section" id="equipe">
+    <div class="container">
+      <span class="section-label">Corps enseignant</span>
+      <h2 class="section-title">Des experts au cœur<br />de l'industrie</h2>
+      <p class="section-subtitle" style="margin-top:16px;">
+        Nos intervenants sont tous des professionnels actifs qui apportent une vision
+        terrain et un carnet d'adresses inestimable.
+      </p>
+      <div class="equipe-grid">
+        <div class="prof-card fade-in">
+          <div class="prof-photo" style="background: linear-gradient(135deg, #1c1c1c, #2a2a2a); font-size:60px; display:flex;align-items:center;justify-content:center;">👩‍💼</div>
+          <div class="prof-info">
+            <div class="prof-name">Isabelle Morand</div>
+            <div class="prof-role">Directrice du Programme</div>
+            <div class="prof-desc">Ancienne directrice adjointe chez LVMH, 20 ans d'expertise en stratégie de marques de luxe.</div>
+          </div>
+        </div>
+        <div class="prof-card fade-in">
+          <div class="prof-photo" style="background: linear-gradient(135deg, #1c1c1c, #2a2a2a); font-size:60px; display:flex;align-items:center;justify-content:center;">👨‍🏫</div>
+          <div class="prof-info">
+            <div class="prof-name">Alexandre Vernet</div>
+            <div class="prof-role">Responsable Marketing</div>
+            <div class="prof-desc">Consultant senior pour Richemont et Kering, spécialiste du digital et de l'expérience client premium.</div>
+          </div>
+        </div>
+        <div class="prof-card fade-in">
+          <div class="prof-photo" style="background: linear-gradient(135deg, #1c1c1c, #2a2a2a); font-size:60px; display:flex;align-items:center;justify-content:center;">👩‍🎨</div>
+          <div class="prof-info">
+            <div class="prof-name">Sophie Battistini</div>
+            <div class="prof-role">Responsable Création</div>
+            <div class="prof-desc">Ancienne directrice artistique chez Hermès, enseignante passionnée par la transmission des codes de l'excellence.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ PARTENAIRES ══════════════════ -->
+  <section class="partenaires-section">
+    <div class="container">
+      <div class="partenaires-header fade-in">
+        <span class="section-label">Maisons partenaires</span>
+        <h2 class="section-title" style="font-size:clamp(22px,3vw,36px);">
+          Ils accueillent nos étudiants
+        </h2>
+      </div>
+      <div class="partenaires-logos">
+        <div class="partenaire-logo">LVMH</div>
+        <div class="partenaire-logo">Chanel</div>
+        <div class="partenaire-logo">Kering</div>
+        <div class="partenaire-logo">Hermès</div>
+        <div class="partenaire-logo">Cartier</div>
+        <div class="partenaire-logo">Dior</div>
+        <div class="partenaire-logo">Louis Vuitton</div>
+        <div class="partenaire-logo">Bulgari</div>
+        <div class="partenaire-logo">Richemont</div>
+        <div class="partenaire-logo">Sephora</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FAQ ═══════════════════════════ -->
+  <section class="section faq-section" id="faq">
+    <div class="container">
+      <span class="section-label">Questions fréquentes</span>
+      <h2 class="section-title">Tout ce que vous<br />devez savoir</h2>
+      <div class="faq-grid">
+        <div class="faq-item">
+          <button class="faq-question">
+            Quels sont les prérequis pour candidater ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Le Bachelor Luxe est ouvert aux titulaires d'un Baccalauréat (toutes filières)
+            ou d'un diplôme équivalent. Aucune expérience préalable dans le luxe n'est requise,
+            mais une forte motivation et une sensibilité au secteur sont essentielles.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Quelle est la durée du programme ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            La formation se déroule sur 3 ans (Bac+3), sanctionnée par un titre de niveau 6
+            reconnu par l'État. Elle inclut des stages obligatoires en entreprise et un semestre
+            optionnel à l'international.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Y a-t-il une formation en alternance ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Oui, dès la 2ème année, le programme est disponible en alternance (contrat
+            d'apprentissage ou de professionnalisation). Un service dédié vous aide à trouver
+            votre entreprise partenaire parmi notre réseau.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Quels sont les frais de scolarité ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Les frais varient selon le mode de financement (initial, alternance). Contactez
+            notre service admissions pour un devis personnalisé. Des bourses et aides
+            financières sont disponibles selon votre profil.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Quand se déroulent les entretiens de sélection ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Les entretiens ont lieu en continu tout au long de l'année, avec des sessions
+            organisées chaque mois de janvier à juillet. Déposez votre dossier le plus tôt
+            possible, les places étant limitées à 30 par promotion.
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question">
+            Le diplôme est-il reconnu à l'international ?
+            <span class="faq-question-icon">+</span>
+          </button>
+          <div class="faq-answer">
+            Notre titre est reconnu par l'État français (RNCP niveau 6). Il est également
+            reconnu par nos universités partenaires en Europe, aux États-Unis et en Asie,
+            facilitant les mobilités et les carrières internationales.
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ CANDIDATURE / FORM ═══════════ -->
+  <section class="section candidature-section" id="candidature">
+    <div class="container">
+      <div class="candidature-grid">
+        <div class="candidature-info fade-in">
+          <span class="section-label">Déposez votre candidature</span>
+          <h2 class="section-title">Rejoignez<br />l'excellence</h2>
+          <div class="divider-gold"></div>
+          <p class="section-subtitle">
+            La rentrée 2025 approche. Chaque promotion est limitée à
+            <strong style="color:var(--crème);">30 étudiants</strong> pour garantir
+            un accompagnement personnalisé de qualité.
+          </p>
+          <div class="candidature-checklist">
+            <div class="candidature-check">
+              <div class="candidature-check-icon">✓</div>
+              <span>Réponse garantie sous 48 h ouvrées</span>
+            </div>
+            <div class="candidature-check">
+              <div class="candidature-check-icon">✓</div>
+              <span>Entretien individuel avec un conseiller</span>
+            </div>
+            <div class="candidature-check">
+              <div class="candidature-check-icon">✓</div>
+              <span>Financement et alternance accompagnés</span>
+            </div>
+            <div class="candidature-check">
+              <div class="candidature-check-icon">✓</div>
+              <span>Journées d'immersion sur demande</span>
+            </div>
+          </div>
+        </div>
+        <div class="form-card fade-in">
+          <h3>Demande d'information</h3>
+          <p>Recevez la plaquette complète et prenez rendez-vous avec notre équipe.</p>
+          <form id="candidatureForm" novalidate>
+            <div class="form-row">
+              <div class="form-group">
+                <label for="prenom">Prénom *</label>
+                <input type="text" id="prenom" name="prenom" placeholder="Votre prénom" required />
+              </div>
+              <div class="form-group">
+                <label for="nom">Nom *</label>
+                <input type="text" id="nom" name="nom" placeholder="Votre nom" required />
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="email">E-mail *</label>
+              <input type="email" id="email" name="email" placeholder="votre@email.com" required />
+            </div>
+            <div class="form-group">
+              <label for="tel">Téléphone</label>
+              <input type="tel" id="tel" name="tel" placeholder="+33 6 00 00 00 00" />
+            </div>
+            <div class="form-group">
+              <label for="niveau">Niveau d'études actuel *</label>
+              <select id="niveau" name="niveau" required>
+                <option value="" disabled selected>Choisissez votre niveau</option>
+                <option value="bac">Terminale / Baccalauréat</option>
+                <option value="bac1">Bac+1</option>
+                <option value="bac2">Bac+2</option>
+                <option value="bac3">Bac+3 et plus</option>
+                <option value="autre">Autre</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="message">Votre projet (optionnel)</label>
+              <textarea id="message" name="message" placeholder="Décrivez votre projet professionnel ou vos questions…"></textarea>
+            </div>
+            <div class="form-consent">
+              <input type="checkbox" id="consent" name="consent" required />
+              <label for="consent">
+                J'accepte que mes données soient utilisées pour traiter ma demande, conformément à la
+                <a href="#">politique de confidentialité</a> de l'EAC.
+              </label>
+            </div>
+            <button type="submit" class="btn-primary form-submit">
+              Envoyer ma demande &nbsp;→
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ═══════════════════ FOOTER ════════════════════════ -->
+  <footer class="footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div>
+          <div class="footer-brand-logo">EAC <span>|</span> Luxe</div>
+          <p class="footer-brand-desc">
+            L'École des Arts et Communication forme depuis plus de 20 ans les professionnels
+            des industries créatives et du luxe. Une pédagogie d'excellence pour des ambitions à la hauteur.
+          </p>
+          <div class="footer-social">
+            <a href="#" aria-label="Instagram">📸</a>
+            <a href="#" aria-label="LinkedIn">💼</a>
+            <a href="#" aria-label="TikTok">🎵</a>
+            <a href="#" aria-label="YouTube">▶</a>
+          </div>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Formation</div>
+          <ul>
+            <li><a href="#programme">Le Programme</a></li>
+            <li><a href="#specialisations">Spécialisations</a></li>
+            <li><a href="#debouches">Débouchés</a></li>
+            <li><a href="#equipe">Équipe enseignante</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">École</div>
+          <ul>
+            <li><a href="#">À propos de l'EAC</a></li>
+            <li><a href="#">Vie étudiante</a></li>
+            <li><a href="#">Partenariats</a></li>
+            <li><a href="#">Actualités</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <div class="footer-col-title">Contact</div>
+          <ul>
+            <li><a href="#candidature">Candidater</a></li>
+            <li><a href="#">Portes ouvertes</a></li>
+            <li><a href="#">FAQ</a></li>
+            <li><a href="#">admissions@eac.fr</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <p class="footer-copy">© 2025 EAC — École des Arts et Communication. Tous droits réservés.</p>
+        <div class="footer-legal">
+          <a href="#">Mentions légales</a>
+          <a href="#">Politique de confidentialité</a>
+          <a href="#">Cookies</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <!-- ═══════════════════ STICKY MOBILE CTA ════════════ -->
+  <div class="sticky-cta-mobile">
+    <a href="#candidature" class="btn-primary">Candidater maintenant</a>
+  </div>
+
+  <!-- ═══════════════════ JAVASCRIPT ═══════════════════ -->
+  <script>
+    /* --- Intersection Observer: fade-in ─────────────── */
+    const fadeEls = document.querySelectorAll('.fade-in');
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          e.target.classList.add('visible');
+          observer.unobserve(e.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    fadeEls.forEach(el => observer.observe(el));
+
+    /* --- Testimonials carousel ──────────────────────── */
+    const track = document.getElementById('testimonialsTrack');
+    document.getElementById('nextBtn').addEventListener('click', () => {
+      track.scrollBy({ left: 412, behavior: 'smooth' });
+    });
+    document.getElementById('prevBtn').addEventListener('click', () => {
+      track.scrollBy({ left: -412, behavior: 'smooth' });
+    });
+
+    /* --- FAQ accordion ──────────────────────────────── */
+    document.querySelectorAll('.faq-question').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const item = btn.parentElement;
+        const isOpen = item.classList.contains('open');
+        document.querySelectorAll('.faq-item').forEach(i => i.classList.remove('open'));
+        if (!isOpen) item.classList.add('open');
+      });
+    });
+
+    /* --- Form submission ────────────────────────────── */
+    document.getElementById('candidatureForm').addEventListener('submit', function(e) {
+      e.preventDefault();
+      const prenom = document.getElementById('prenom').value.trim();
+      const email  = document.getElementById('email').value.trim();
+      const consent = document.getElementById('consent').checked;
+      if (!prenom || !email || !consent) {
+        alert('Veuillez remplir tous les champs obligatoires et accepter la politique de confidentialité.');
+        return;
+      }
+      // → Replace this block with your Landingi form handler or webhook
+      const btn = this.querySelector('button[type="submit"]');
+      btn.textContent = '✓ Demande envoyée !';
+      btn.style.background = '#2d7a4f';
+      btn.disabled = true;
+    });
+
+    /* --- Nav scroll effect ──────────────────────────── */
+    window.addEventListener('scroll', () => {
+      const nav = document.getElementById('nav');
+      nav.style.background = window.scrollY > 60
+        ? 'rgba(12,12,12,0.98)'
+        : 'rgba(12,12,12,0.92)';
+    });
+
+    /* --- Animated counters on scroll ───────────────── */
+    function animateCount(el, target, suffix) {
+      let current = 0;
+      const step = target / 50;
+      const timer = setInterval(() => {
+        current += step;
+        if (current >= target) { current = target; clearInterval(timer); }
+        el.textContent = Math.floor(current) + suffix;
+      }, 30);
+    }
+    const counterObserver = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) {
+          const el = e.target;
+          const raw = el.dataset.count;
+          const suffix = el.dataset.suffix || '';
+          animateCount(el, parseFloat(raw), suffix);
+          counterObserver.unobserve(el);
+        }
+      });
+    }, { threshold: 0.5 });
+    document.querySelectorAll('[data-count]').forEach(el => counterObserver.observe(el));
+  </script>
+</body>
+</html>
