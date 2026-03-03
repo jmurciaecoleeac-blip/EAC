@@ -6,15 +6,10 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/Montserrat';
+import {FONT_FAMILY as fontFamily} from './fonts';
 
 // Animation technique: Bold scale + opacity spring for a punchy entrance.
 // ACT 3 outro: EAC remains centered with a subtle glow pulse, fading to 1 last beat.
-
-const {fontFamily} = loadFont('normal', {
-	weights: ['900'],
-	subsets: ['latin'],
-});
 
 const WHITE = '#FFFFFF';
 const RED = '#DC0D17';

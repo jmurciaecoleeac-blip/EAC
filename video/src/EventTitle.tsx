@@ -6,16 +6,11 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/Montserrat';
+import {FONT_FAMILY as fontFamily} from './fonts';
 
 // Animation technique: Staggered word-by-word clip reveal — each word slides up
 // from within an overflow:hidden container, creating a "card reveal" effect.
 // 15-frame delay between each word. scaleX interpolation draws the red divider.
-
-const {fontFamily} = loadFont('normal', {
-	weights: ['700'],
-	subsets: ['latin'],
-});
 
 const WHITE = '#FFFFFF';
 const RED = '#DC0D17';
