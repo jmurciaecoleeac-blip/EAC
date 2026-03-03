@@ -6,16 +6,11 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/Montserrat';
+import {FONT_FAMILY as fontFamily} from './fonts';
 
 // Animation technique: Subtle fade-in combined with a CSS filter blur transition
 // (blur: 6px → 0px) using spring physics for a "focus-in" effect.
 // The address sits at 70% opacity for secondary text hierarchy.
-
-const {fontFamily} = loadFont('normal', {
-	weights: ['400'],
-	subsets: ['latin'],
-});
 
 const WHITE = '#FFFFFF';
 

@@ -6,16 +6,12 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/Montserrat';
+import {FONT_FAMILY as fontFamily} from './fonts';
 
 // Animation technique: Red pill button bounces in using spring with low damping
 // (damping: 8) for playful overshoot. A very subtle continuous scale pulse
 // (driven by sin of frame) keeps it alive during the content phase.
 
-const {fontFamily} = loadFont('normal', {
-	weights: ['700'],
-	subsets: ['latin'],
-});
 
 const RED = '#DC0D17';
 const WHITE = '#FFFFFF';

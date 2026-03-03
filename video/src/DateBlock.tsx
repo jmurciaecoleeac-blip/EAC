@@ -6,20 +6,13 @@ import {
 	useCurrentFrame,
 	useVideoConfig,
 } from 'remotion';
-import {loadFont} from '@remotion/google-fonts/Montserrat';
+import {FONT_FAMILY} from './fonts';
 
 // Animation technique: "14 MARS" uses a bold scale spring (0.8 → 1) with opacity.
 // "14H – 16H" uses a gentle fade + slide-up for secondary info hierarchy.
 
-const {fontFamily: fontFamilyBold} = loadFont('normal', {
-	weights: ['900'],
-	subsets: ['latin'],
-});
-
-const {fontFamily: fontFamilyRegular} = loadFont('normal', {
-	weights: ['400'],
-	subsets: ['latin'],
-});
+const fontFamilyBold = FONT_FAMILY;
+const fontFamilyRegular = FONT_FAMILY;
 
 const WHITE = '#FFFFFF';
 const RED = '#DC0D17';
