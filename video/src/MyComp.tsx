@@ -8,13 +8,13 @@ import {
 } from 'remotion';
 
 const RED = '#DC0D17';
-const NAVY = '#1C2459';
+const DARK_RED = '#b00b13';
+const NAVY = '#1A1F4E';
 const WHITE = '#FFFFFF';
-const LIGHT_BLUE = '#8892b8';
 
 /* ─── Sub-components ─────────────────────────────────────────── */
 
-const SlideUp: React.FC<{
+const DropIn: React.FC<{
 	delay: number;
 	children: React.ReactNode;
 	style?: React.CSSProperties;
@@ -22,9 +22,9 @@ const SlideUp: React.FC<{
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const f = Math.max(0, frame - delay);
-	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 120}});
-	const y = interpolate(s, [0, 1], [90, 0]);
-	const opacity = interpolate(f, [0, 14], [0, 1], {
+	const s = spring({fps, frame: f, config: {damping: 160, stiffness: 80}});
+	const y = interpolate(s, [0, 1], [-140, 0]);
+	const opacity = interpolate(f, [0, 10], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 	});
@@ -35,7 +35,7 @@ const SlideUp: React.FC<{
 	);
 };
 
-const SlideLeft: React.FC<{
+const SlideUp: React.FC<{
 	delay: number;
 	children: React.ReactNode;
 	style?: React.CSSProperties;
@@ -43,20 +43,20 @@ const SlideLeft: React.FC<{
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const f = Math.max(0, frame - delay);
-	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 120}});
-	const x = interpolate(s, [0, 1], [-90, 0]);
-	const opacity = interpolate(f, [0, 14], [0, 1], {
+	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 100}});
+	const y = interpolate(s, [0, 1], [80, 0]);
+	const opacity = interpolate(f, [0, 8], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 	});
 	return (
-		<div style={{transform: `translateX(${x}px)`, opacity, ...style}}>
+		<div style={{transform: `translateY(${y}px)`, opacity, ...style}}>
 			{children}
 		</div>
 	);
 };
 
-const ScaleIn: React.FC<{
+const PopIn: React.FC<{
 	delay: number;
 	children: React.ReactNode;
 	style?: React.CSSProperties;
@@ -64,44 +64,40 @@ const ScaleIn: React.FC<{
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 	const f = Math.max(0, frame - delay);
-	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 90}});
-	const scale = interpolate(s, [0, 1], [0.2, 1]);
-	const opacity = interpolate(f, [0, 16], [0, 1], {
+	const s = spring({fps, frame: f, config: {damping: 110, stiffness: 220}});
+	const opacity = interpolate(f, [0, 6], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 	});
 	return (
+		<div style={{transform: `scale(${s})`, opacity, ...style}}>
+			{children}
+		</div>
+	);
+};
+
+const WipeBanner: React.FC<{
+	delay: number;
+	bgColor: string;
+	fromRight?: boolean;
+	children: React.ReactNode;
+}> = ({delay, bgColor, fromRight = false, children}) => {
+	const frame = useCurrentFrame();
+	const {fps} = useVideoConfig();
+	const f = Math.max(0, frame - delay);
+	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 85}});
+	return (
 		<div
 			style={{
-				transform: `scale(${scale})`,
-				opacity,
-				transformOrigin: 'left bottom',
-				...style,
+				background: bgColor,
+				transform: `scaleX(${s})`,
+				transformOrigin: fromRight ? 'right center' : 'left center',
+				width: '100%',
+				overflow: 'hidden',
 			}}
 		>
 			{children}
 		</div>
-	);
-};
-
-const LineReveal: React.FC<{
-	delay: number;
-	color: string;
-	thickness?: number;
-}> = ({delay, color, thickness = 4}) => {
-	const frame = useCurrentFrame();
-	const {fps} = useVideoConfig();
-	const f = Math.max(0, frame - delay);
-	const s = spring({fps, frame: f, config: {damping: 200, stiffness: 70}});
-	const width = interpolate(s, [0, 1], [0, 100]);
-	return (
-		<div
-			style={{
-				height: thickness,
-				width: `${width}%`,
-				background: color,
-			}}
-		/>
 	);
 };
 
@@ -111,29 +107,40 @@ export const MyComp: React.FC = () => {
 	const frame = useCurrentFrame();
 	const {fps} = useVideoConfig();
 
-	// Background geometric shapes
-	const circle1 = spring({
-		fps,
-		frame: Math.max(0, frame - 3),
-		config: {damping: 200, stiffness: 60},
-	});
-	const circle2 = spring({
-		fps,
-		frame: Math.max(0, frame - 12),
-		config: {damping: 200, stiffness: 50},
-	});
-	const diagonalProgress = spring({
-		fps,
-		frame: Math.max(0, frame - 5),
-		config: {damping: 200, stiffness: 60},
+	// Background reveal
+	const bgIn = interpolate(frame, [0, 8], [0, 1], {
+		extrapolateLeft: 'clamp',
+		extrapolateRight: 'clamp',
 	});
 
-	// Pulsing dot animation
-	const pulseValue = Math.sin((frame / fps) * Math.PI * 2.5);
-	const pulseOpacity = interpolate(pulseValue, [-1, 1], [0.5, 1]);
+	// Central frame scale-in
+	const frameSpring = spring({
+		fps,
+		frame: Math.max(0, frame - 48),
+		config: {damping: 200, stiffness: 65},
+	});
 
-	// Global fade-in
-	const globalOpacity = interpolate(frame, [0, 15], [0, 1], {
+	// CTA breathing pulse
+	const pulse = Math.sin((frame / fps) * Math.PI * 1.5);
+	const ctaPulse = interpolate(pulse, [-1, 1], [0.988, 1.012]);
+
+	// Frame interior stripe animations
+	const stripes = [0, 1, 2, 3, 4, 5, 6, 7].map((i) =>
+		spring({
+			fps,
+			frame: Math.max(0, frame - (62 + i * 7)),
+			config: {damping: 200, stiffness: 90},
+		})
+	);
+
+	// Text fade inside frame
+	const innerTextOpacity = interpolate(frame, [100, 138], [0, 0.18], {
+		extrapolateLeft: 'clamp',
+		extrapolateRight: 'clamp',
+	});
+
+	// Address fade-in
+	const addressOpacity = interpolate(frame, [195, 225], [0, 1], {
 		extrapolateLeft: 'clamp',
 		extrapolateRight: 'clamp',
 	});
@@ -141,363 +148,302 @@ export const MyComp: React.FC = () => {
 	return (
 		<AbsoluteFill
 			style={{
-				background: NAVY,
+				background: RED,
 				fontFamily: "'Arial Black', 'Arial Bold', Arial, Helvetica, sans-serif",
 				overflow: 'hidden',
-				opacity: globalOpacity,
+				opacity: bgIn,
 			}}
 		>
-			{/* ── Decorative background shapes ── */}
-			<AbsoluteFill>
-				{/* Large red circle – top right */}
-				<div
-					style={{
-						position: 'absolute',
-						top: -280,
-						right: -320,
-						width: 800,
-						height: 800,
-						borderRadius: '50%',
-						background: RED,
-						opacity: 0.13,
-						transform: `scale(${interpolate(circle1, [0, 1], [0.1, 1])})`,
-					}}
-				/>
-				{/* Circle outline – bottom left */}
-				<div
-					style={{
-						position: 'absolute',
-						bottom: -200,
-						left: -220,
-						width: 700,
-						height: 700,
-						borderRadius: '50%',
-						border: `4px solid ${RED}`,
-						opacity: 0.18,
-						transform: `scale(${interpolate(circle2, [0, 1], [0.1, 1])})`,
-					}}
-				/>
-				{/* Inner circle outline */}
-				<div
-					style={{
-						position: 'absolute',
-						bottom: -90,
-						left: -100,
-						width: 420,
-						height: 420,
-						borderRadius: '50%',
-						border: `2px solid ${WHITE}`,
-						opacity: 0.07,
-						transform: `scale(${interpolate(circle2, [0, 1], [0.1, 1])})`,
-					}}
-				/>
-				{/* Diagonal gradient band */}
-				<div
-					style={{
-						position: 'absolute',
-						top: 0,
-						left: 0,
-						width: '100%',
-						height: '100%',
-						background: `linear-gradient(140deg, ${RED} 0%, transparent 40%)`,
-						opacity: interpolate(diagonalProgress, [0, 1], [0, 0.10]),
-					}}
-				/>
-				{/* Thin diagonal stripe */}
-				<div
-					style={{
-						position: 'absolute',
-						top: 320,
-						left: -60,
-						width: 8,
-						height: `${interpolate(diagonalProgress, [0, 1], [0, 180])}%`,
-						background: RED,
-						opacity: 0.25,
-						transform: 'rotate(20deg)',
-						transformOrigin: 'top center',
-					}}
-				/>
-			</AbsoluteFill>
-
-			{/* ── TOP SECTION: EAC brand ── */}
-			<AbsoluteFill
+			{/* ══════════════════════════════════
+			    1. EAC Logo — drops from top
+			    ══════════════════════════════════ */}
+			<DropIn
+				delay={5}
 				style={{
-					padding: '100px 80px 0',
+					position: 'absolute',
+					top: 90,
+					left: 0,
+					right: 0,
+					display: 'flex',
 					flexDirection: 'column',
-					justifyContent: 'flex-start',
-					alignItems: 'flex-start',
+					alignItems: 'center',
+					gap: 26,
 				}}
 			>
-				{/* Top red accent line */}
-				<LineReveal delay={5} color={RED} thickness={6} />
-
-				{/* EAC */}
-				<div style={{marginTop: 32}}>
-					<SlideLeft delay={18}>
-						<div
-							style={{
-								color: WHITE,
-								fontSize: 68,
-								fontWeight: 900,
-								letterSpacing: 18,
-								textTransform: 'uppercase',
-								lineHeight: 1,
-							}}
-						>
-							EAC
-						</div>
-					</SlideLeft>
-					<SlideLeft delay={30}>
-						<div
-							style={{
-								color: LIGHT_BLUE,
-								fontSize: 23,
-								fontWeight: 400,
-								letterSpacing: 1.5,
-								marginTop: 8,
-								fontFamily: 'Arial, Helvetica, sans-serif',
-							}}
-						>
-							École des Arts et Communication
-						</div>
-					</SlideLeft>
-				</div>
-			</AbsoluteFill>
-
-			{/* ── CENTER: Main title + date ── */}
-			<AbsoluteFill
-				style={{
-					padding: '0 80px',
-					flexDirection: 'column',
-					justifyContent: 'center',
-					alignItems: 'flex-start',
-				}}
-			>
-				{/* Label */}
-				<SlideLeft delay={55}>
-					<div
-						style={{
-							color: RED,
-							fontSize: 19,
-							fontWeight: 700,
-							letterSpacing: 8,
-							textTransform: 'uppercase',
-							marginBottom: 28,
-							fontFamily: 'Arial, Helvetica, sans-serif',
-						}}
-					>
-						· Invitation ·
-					</div>
-				</SlideLeft>
-
-				{/* JOURNÉE */}
-				<div style={{overflow: 'hidden'}}>
-					<SlideUp delay={65}>
-						<div
-							style={{
-								color: WHITE,
-								fontSize: 104,
-								fontWeight: 900,
-								lineHeight: 1.05,
-								textTransform: 'uppercase',
-							}}
-						>
-							Journée
-						</div>
-					</SlideUp>
-				</div>
-
-				{/* PORTES */}
-				<div style={{overflow: 'hidden'}}>
-					<SlideUp delay={80}>
-						<div
-							style={{
-								color: WHITE,
-								fontSize: 104,
-								fontWeight: 900,
-								lineHeight: 1.05,
-								textTransform: 'uppercase',
-							}}
-						>
-							Portes
-						</div>
-					</SlideUp>
-				</div>
-
-				{/* OUVERTES – red */}
-				<div style={{overflow: 'hidden'}}>
-					<SlideUp delay={96}>
-						<div
-							style={{
-								color: RED,
-								fontSize: 104,
-								fontWeight: 900,
-								lineHeight: 1.05,
-								textTransform: 'uppercase',
-							}}
-						>
-							Ouvertes
-						</div>
-					</SlideUp>
-				</div>
-
-				{/* Separator */}
-				<div style={{marginTop: 44, marginBottom: 44, width: '100%'}}>
-					<LineReveal delay={116} color={WHITE} thickness={2} />
-				</div>
-
-				{/* DATE: 14 + MARS */}
+				{/* Bordered EAC box */}
 				<div
 					style={{
-						display: 'flex',
-						alignItems: 'flex-end',
-						gap: 24,
+						border: `5px solid ${WHITE}`,
+						padding: '18px 52px',
 					}}
 				>
-					<div style={{overflow: 'hidden'}}>
-						<ScaleIn delay={126}>
-							<div
-								style={{
-									color: WHITE,
-									fontSize: 160,
-									fontWeight: 900,
-									lineHeight: 0.9,
-								}}
-							>
-								14
-							</div>
-						</ScaleIn>
-					</div>
-
-					<div style={{paddingBottom: 18}}>
-						<div style={{overflow: 'hidden'}}>
-							<SlideUp delay={142}>
-								<div
-									style={{
-										color: RED,
-										fontSize: 70,
-										fontWeight: 900,
-										textTransform: 'uppercase',
-										letterSpacing: 8,
-										lineHeight: 1,
-									}}
-								>
-									Mars
-								</div>
-							</SlideUp>
-						</div>
-					</div>
-				</div>
-
-				{/* TIME */}
-				<SlideLeft delay={158}>
 					<div
 						style={{
 							color: WHITE,
-							fontSize: 42,
-							fontWeight: 500,
-							letterSpacing: 5,
-							marginTop: 20,
-							opacity: 0.88,
-							fontFamily: 'Arial, Helvetica, sans-serif',
+							fontSize: 90,
+							fontWeight: 900,
+							letterSpacing: 24,
+							lineHeight: 1,
+							textAlign: 'center',
 						}}
 					>
-						10H — 16H
-					</div>
-				</SlideLeft>
-			</AbsoluteFill>
-
-			{/* ── BOTTOM: Address ── */}
-			<AbsoluteFill
-				style={{
-					padding: '0 80px 110px',
-					flexDirection: 'column',
-					justifyContent: 'flex-end',
-					alignItems: 'flex-start',
-				}}
-			>
-				<LineReveal delay={182} color={RED} thickness={3} />
-
-				<div style={{marginTop: 26}}>
-					<div style={{overflow: 'hidden'}}>
-						<SlideUp delay={192}>
-							<div
-								style={{
-									color: WHITE,
-									fontSize: 34,
-									fontWeight: 700,
-									letterSpacing: 1,
-									fontFamily: 'Arial, Helvetica, sans-serif',
-								}}
-							>
-								13 rue Miollis
-							</div>
-						</SlideUp>
-					</div>
-
-					<div style={{overflow: 'hidden'}}>
-						<SlideUp delay={204}>
-							<div
-								style={{
-									color: LIGHT_BLUE,
-									fontSize: 30,
-									fontWeight: 400,
-									marginTop: 6,
-									fontFamily: 'Arial, Helvetica, sans-serif',
-								}}
-							>
-								75015 Paris
-							</div>
-						</SlideUp>
+						EAC
 					</div>
 				</div>
 
-				{/* Decorative dots */}
+				{/* School subtitle */}
 				<div
 					style={{
-						marginTop: 36,
-						display: 'flex',
-						gap: 12,
-						opacity: interpolate(frame, [218, 248], [0, 1], {
-							extrapolateLeft: 'clamp',
-							extrapolateRight: 'clamp',
-						}),
+						color: WHITE,
+						fontSize: 23,
+						fontWeight: 400,
+						letterSpacing: 1.8,
+						textAlign: 'center',
+						fontFamily: 'Arial, Helvetica, sans-serif',
+						lineHeight: 1.6,
+						opacity: 0.92,
 					}}
 				>
-					{[0, 1, 2].map((i) => (
+					L'ÉCOLE FRANÇAISE DU MARCHÉ
+					<br />
+					DE L'ART, DE LA CULTURE ET DU LUXE
+				</div>
+			</DropIn>
+
+			{/* ══════════════════════════════════
+			    2. JOURNÉE PORTES OUVERTES — wipe left
+			    ══════════════════════════════════ */}
+			<div style={{position: 'absolute', top: 418, left: 0, right: 0}}>
+				<WipeBanner delay={26} bgColor={WHITE}>
+					<div style={{padding: '26px 32px', textAlign: 'center'}}>
+						<div
+							style={{
+								color: RED,
+								fontSize: 56,
+								fontWeight: 900,
+								textTransform: 'uppercase',
+								lineHeight: 1,
+								fontStyle: 'italic',
+								letterSpacing: 1,
+							}}
+						>
+							JOURNÉE PORTES OUVERTES
+						</div>
+					</div>
+				</WipeBanner>
+			</div>
+
+			{/* ══════════════════════════════════
+			    3. Central white frame — scales in
+			    ══════════════════════════════════ */}
+			<div
+				style={{
+					position: 'absolute',
+					top: 528,
+					left: 64,
+					right: 64,
+					height: 836,
+					border: `14px solid ${WHITE}`,
+					transform: `scale(${interpolate(frameSpring, [0, 1], [0.55, 1])})`,
+					opacity: frameSpring,
+					overflow: 'hidden',
+				}}
+			>
+				<div
+					style={{
+						width: '100%',
+						height: '100%',
+						background: DARK_RED,
+						display: 'flex',
+						flexDirection: 'column',
+						alignItems: 'center',
+						justifyContent: 'center',
+						gap: 18,
+						padding: '60px 50px',
+					}}
+				>
+					{/* Animated horizontal stripes */}
+					{stripes.map((sp, i) => (
 						<div
 							key={i}
 							style={{
-								width: 10,
-								height: 10,
-								borderRadius: '50%',
-								background: i === 1 ? RED : WHITE,
-								opacity: i === 1 ? pulseOpacity : 0.35,
+								height: i === 3 || i === 4 ? 3 : 1,
+								background: WHITE,
+								opacity: i === 3 || i === 4 ? 0.55 : 0.22,
+								width: `${interpolate(sp, [0, 1], [0, 100])}%`,
+								alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
 							}}
 						/>
 					))}
-				</div>
-			</AbsoluteFill>
 
-			{/* Bottom red accent line */}
-			<AbsoluteFill
+					{/* Ghost text inside frame */}
+					<div
+						style={{
+							color: WHITE,
+							fontSize: 110,
+							fontWeight: 900,
+							letterSpacing: 14,
+							opacity: innerTextOpacity,
+							marginTop: 28,
+							textAlign: 'center',
+						}}
+					>
+						JPO
+					</div>
+
+					{/* More stripes below */}
+					{[8, 9, 10].map((i) => {
+						const sp2 = spring({
+							fps,
+							frame: Math.max(0, frame - (62 + i * 7)),
+							config: {damping: 200, stiffness: 90},
+						});
+						return (
+							<div
+								key={i}
+								style={{
+									height: 1,
+									background: WHITE,
+									opacity: 0.18,
+									width: `${interpolate(sp2, [0, 1], [0, 100])}%`,
+									alignSelf: i % 2 === 0 ? 'flex-start' : 'flex-end',
+								}}
+							/>
+						);
+					})}
+				</div>
+			</div>
+
+			{/* ══════════════════════════════════
+			    4. Date badge — pops in (navy pill)
+			    ══════════════════════════════════ */}
+			<div
 				style={{
-					padding: '0 80px 68px',
-					flexDirection: 'column',
-					justifyContent: 'flex-end',
+					position: 'absolute',
+					top: 1376,
+					left: 0,
+					right: 0,
+					display: 'flex',
+					justifyContent: 'center',
+				}}
+			>
+				<PopIn delay={116}>
+					<div
+						style={{
+							background: NAVY,
+							paddingTop: 22,
+							paddingBottom: 22,
+							paddingLeft: 58,
+							paddingRight: 58,
+						}}
+					>
+						<div
+							style={{
+								color: WHITE,
+								fontSize: 44,
+								fontWeight: 900,
+								letterSpacing: 2,
+								textTransform: 'uppercase',
+								whiteSpace: 'nowrap',
+							}}
+						>
+							PARIS · 14 MARS · 10H–16H
+						</div>
+					</div>
+				</PopIn>
+			</div>
+
+			{/* ══════════════════════════════════
+			    5. MARCHÉ banner — wipes right
+			    ══════════════════════════════════ */}
+			<div style={{position: 'absolute', top: 1498, left: 0, right: 0}}>
+				<WipeBanner delay={142} bgColor={WHITE} fromRight>
+					<div style={{padding: '24px 32px', textAlign: 'center'}}>
+						<div
+							style={{
+								color: RED,
+								fontSize: 44,
+								fontWeight: 900,
+								textTransform: 'uppercase',
+								lineHeight: 1,
+								fontStyle: 'italic',
+								letterSpacing: 1,
+							}}
+						>
+							MARCHÉ DE L'ART · CULTURE · LUXE
+						</div>
+					</div>
+				</WipeBanner>
+			</div>
+
+			{/* ══════════════════════════════════
+			    6. RÉSERVE TA PLACE ! — slides up
+			    ══════════════════════════════════ */}
+			<div
+				style={{
+					position: 'absolute',
+					top: 1612,
+					left: 0,
+					right: 0,
+					display: 'flex',
+					justifyContent: 'center',
+				}}
+			>
+				<SlideUp delay={166}>
+					<div style={{transform: `scale(${ctaPulse})`}}>
+						<div
+							style={{
+								background: WHITE,
+								paddingTop: 28,
+								paddingBottom: 28,
+								paddingLeft: 80,
+								paddingRight: 80,
+								textAlign: 'center',
+							}}
+						>
+							<div
+								style={{
+									color: NAVY,
+									fontSize: 56,
+									fontWeight: 900,
+									letterSpacing: 2,
+									textTransform: 'uppercase',
+								}}
+							>
+								RÉSERVE TA PLACE !
+							</div>
+						</div>
+					</div>
+				</SlideUp>
+			</div>
+
+			{/* ══════════════════════════════════
+			    7. Address — fades in
+			    ══════════════════════════════════ */}
+			<div
+				style={{
+					position: 'absolute',
+					bottom: 80,
+					left: 0,
+					right: 0,
+					textAlign: 'center',
+					opacity: addressOpacity,
 				}}
 			>
 				<div
 					style={{
-						opacity: interpolate(frame, [205, 235], [0, 1], {
-							extrapolateLeft: 'clamp',
-							extrapolateRight: 'clamp',
-						}),
+						color: WHITE,
+						fontSize: 26,
+						fontWeight: 400,
+						letterSpacing: 3,
+						fontFamily: 'Arial, Helvetica, sans-serif',
+						opacity: 0.75,
+						textTransform: 'uppercase',
 					}}
 				>
-					<LineReveal delay={205} color={RED} thickness={6} />
+					13 rue Miollis · 75015 Paris
 				</div>
-			</AbsoluteFill>
+			</div>
 		</AbsoluteFill>
 	);
 };
