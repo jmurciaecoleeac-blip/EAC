@@ -3,1268 +3,292 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>EAC — Stage de Découverte · Invitation Exclusive</title>
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,600;0,700;1,400;1,600&family=Montserrat:wght@300;400;500;600&display=swap" rel="stylesheet" />
-
+  <title>EAC — Stage de Découverte · Printemps 2026</title>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;1,400&family=Montserrat:wght@300;400;600&display=swap" rel="stylesheet" />
   <style>
-    /* ── Reset ─────────────────────────────────────────────── */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body {
-      background: #1a1611;
-      font-family: 'Montserrat', sans-serif;
-      color: #f5f0e8;
-      -webkit-font-smoothing: antialiased;
-    }
 
-    /* ── CSS Variables ──────────────────────────────────────── */
     :root {
-      --gold:        #c9a84c;
-      --gold-light:  #e2c97e;
-      --gold-dark:   #9e7c2e;
-      --noir:        #0c0c0c;
-      --noir-soft:   #1a1611;
-      --noir-card:   #141210;
-      --cream:       #f5f0e8;
-      --cream-muted: #d4c9b0;
-      --gray:        #8a8a8a;
-      --max-w:       660px;
-    }
-
-    /* ── Wrapper ────────────────────────────────────────────── */
-    .email-wrapper {
-      max-width: var(--max-w);
-      margin: 0 auto;
-      background: var(--noir-card);
-      border-left:  1px solid rgba(201,168,76,.15);
-      border-right: 1px solid rgba(201,168,76,.15);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       PREHEADER (hidden preview text)
-    ══════════════════════════════════════════════════════════ */
-    .preheader {
-      display: none;
-      font-size: 1px;
-      color: transparent;
-      line-height: 1px;
-      max-height: 0;
-      overflow: hidden;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       TOP BAR
-    ══════════════════════════════════════════════════════════ */
-    .top-bar {
-      background: var(--noir);
-      text-align: center;
-      padding: 10px 24px;
-      font-size: 11px;
-      letter-spacing: .18em;
-      color: var(--gold);
-      text-transform: uppercase;
-      border-bottom: 1px solid rgba(201,168,76,.3);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       HEADER / LOGO
-    ══════════════════════════════════════════════════════════ */
-    .header {
-      background: var(--noir);
-      padding: 36px 48px 32px;
-      text-align: center;
-      border-bottom: 1px solid rgba(201,168,76,.25);
-      position: relative;
-      overflow: hidden;
-    }
-
-    /* subtle radial glow behind logo */
-    .header::before {
-      content: '';
-      position: absolute;
-      top: -60px; left: 50%;
-      transform: translateX(-50%);
-      width: 340px; height: 220px;
-      background: radial-gradient(ellipse, rgba(201,168,76,.12) 0%, transparent 70%);
-      pointer-events: none;
-    }
-
-    .logo-monogram {
-      display: inline-block;
-      width: 72px; height: 72px;
-      border: 1.5px solid var(--gold);
-      border-radius: 50%;
-      line-height: 72px;
-      font-family: 'Playfair Display', serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--gold);
-      letter-spacing: .04em;
-      margin-bottom: 16px;
-      position: relative;
-    }
-
-    .logo-monogram::after {
-      content: '';
-      position: absolute;
-      inset: 4px;
-      border-radius: 50%;
-      border: .5px solid rgba(201,168,76,.35);
-    }
-
-    .logo-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 13px;
-      font-weight: 600;
-      letter-spacing: .55em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-      display: block;
-    }
-
-    .logo-tagline {
-      font-size: 10px;
-      letter-spacing: .22em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-top: 6px;
-      display: block;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       GOLD RULE
-    ══════════════════════════════════════════════════════════ */
-    .divider {
-      display: block;
-      height: 1px;
-      background: linear-gradient(90deg, transparent, var(--gold) 30%, var(--gold-light) 50%, var(--gold) 70%, transparent);
-      margin: 0;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       HERO
-    ══════════════════════════════════════════════════════════ */
-    .hero {
-      position: relative;
-      min-height: 400px;
-      display: flex;
-      align-items: flex-end;
-      overflow: hidden;
-    }
-
-    .hero-img {
-      position: absolute;
-      inset: 0;
-      width: 100%; height: 100%;
-      object-fit: cover;
-      filter: brightness(.55) saturate(.9);
-    }
-
-    /* gold-to-dark gradient overlay */
-    .hero-overlay {
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(
-        to bottom,
-        rgba(12,12,12,.1)   0%,
-        rgba(12,12,12,.25)  40%,
-        rgba(12,12,12,.82)  80%,
-        rgba(12,12,12,1)   100%
-      );
-    }
-
-    .hero-content {
-      position: relative;
-      z-index: 2;
-      padding: 40px 48px 44px;
-      width: 100%;
-    }
-
-    .hero-kicker {
-      font-size: 10px;
-      letter-spacing: .35em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 14px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .hero-kicker::before,
-    .hero-kicker::after {
-      content: '';
-      flex: 0 0 30px;
-      height: 1px;
-      background: var(--gold);
-      opacity: .7;
-    }
-
-    .hero-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 38px;
-      font-weight: 700;
-      line-height: 1.18;
-      color: var(--cream);
-      margin-bottom: 10px;
-    }
-
-    .hero-title em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .hero-sub {
-      font-size: 13.5px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      letter-spacing: .04em;
-      line-height: 1.6;
-      max-width: 480px;
-      margin-bottom: 28px;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       CTA BUTTON
-    ══════════════════════════════════════════════════════════ */
-    .btn-gold {
-      display: inline-block;
-      padding: 14px 36px;
-      background: linear-gradient(135deg, var(--gold) 0%, var(--gold-light) 60%, var(--gold-dark) 100%);
-      color: var(--noir);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      border: none;
-      cursor: pointer;
-      position: relative;
-      transition: opacity .25s;
-    }
-
-    .btn-ghost {
-      display: inline-block;
-      padding: 13px 34px;
-      border: 1px solid var(--gold);
-      color: var(--gold);
-      font-family: 'Montserrat', sans-serif;
-      font-size: 11px;
-      font-weight: 500;
-      letter-spacing: .22em;
-      text-transform: uppercase;
-      text-decoration: none;
-      margin-left: 14px;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       URGENCY RIBBON
-    ══════════════════════════════════════════════════════════ */
-    .ribbon {
-      background: linear-gradient(90deg, var(--gold-dark), var(--gold), var(--gold-light), var(--gold), var(--gold-dark));
-      background-size: 300% 100%;
-      animation: shimmer 4s linear infinite;
-      padding: 12px 24px;
-      text-align: center;
-      color: var(--noir);
-      font-size: 11px;
-      font-weight: 600;
-      letter-spacing: .2em;
-      text-transform: uppercase;
-    }
-
-    @keyframes shimmer {
-      0%   { background-position: 100% 0; }
-      100% { background-position: -100% 0; }
-    }
-
-    .ribbon span {
-      margin: 0 12px;
-      opacity: .5;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       SECTION COMMONS
-    ══════════════════════════════════════════════════════════ */
-    .section {
-      padding: 52px 48px;
-    }
-
-    .section-alt {
-      background: #111009;
-    }
-
-    .section-dark {
-      background: var(--noir);
-    }
-
-    .eyebrow {
-      font-size: 10px;
-      letter-spacing: .32em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 12px;
-      display: block;
-    }
-
-    .section-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 26px;
-      font-weight: 700;
-      color: var(--cream);
-      line-height: 1.3;
-      margin-bottom: 18px;
-    }
-
-    .section-title em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .section-body {
-      font-size: 13.5px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      line-height: 1.78;
-    }
-
-    .section-body strong {
-      color: var(--cream);
-      font-weight: 500;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       INTRO LETTER
-    ══════════════════════════════════════════════════════════ */
-    .intro-letter {
-      padding: 52px 48px 44px;
-    }
-
-    .drop-cap::first-letter {
-      font-family: 'Playfair Display', serif;
-      font-size: 56px;
-      font-weight: 700;
-      color: var(--gold);
-      float: left;
-      line-height: .82;
-      margin: 6px 10px 0 0;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       EXPERIENCE CARDS — 3 PILLARS
-    ══════════════════════════════════════════════════════════ */
-    .pillar-grid {
-      display: table;
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 0 16px;
-    }
-
-    .pillar {
-      display: table-row;
-    }
-
-    .pillar-number {
-      display: table-cell;
-      width: 52px;
-      vertical-align: middle;
-      padding-right: 18px;
-    }
-
-    .pillar-num-inner {
-      width: 44px; height: 44px;
-      border: 1px solid var(--gold);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      color: var(--gold);
-      font-style: italic;
-    }
-
-    .pillar-body {
-      display: table-cell;
-      vertical-align: middle;
-      border-left: 2px solid rgba(201,168,76,.2);
-      padding-left: 20px;
-    }
-
-    .pillar-label {
-      font-size: 11px;
-      letter-spacing: .2em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .pillar-text {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      line-height: 1.6;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       VISUAL GALLERY ROW
-    ══════════════════════════════════════════════════════════ */
-    .gallery-row {
-      display: table;
-      width: 100%;
-      border-collapse: separate;
-      border-spacing: 6px 0;
-    }
-
-    .gallery-cell {
-      display: table-cell;
-      width: 33.33%;
-      padding: 3px;
-    }
-
-    .gallery-img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      display: block;
-      filter: brightness(.8) saturate(.85);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       STATS BAND
-    ══════════════════════════════════════════════════════════ */
-    .stats-band {
-      background: var(--noir);
-      padding: 40px 48px;
-    }
-
-    .stats-table {
-      display: table;
-      width: 100%;
-    }
-
-    .stat-cell {
-      display: table-cell;
-      text-align: center;
-      vertical-align: middle;
-      padding: 0 8px;
-    }
-
-    .stat-sep {
-      display: table-cell;
-      width: 1px;
-      background: rgba(201,168,76,.25);
-      vertical-align: middle;
-      padding: 0;
-    }
-
-    .stat-num {
-      font-family: 'Playfair Display', serif;
-      font-size: 36px;
-      font-weight: 700;
-      color: var(--gold);
-      line-height: 1;
-      display: block;
-    }
-
-    .stat-sup {
-      font-size: 20px;
-      vertical-align: super;
-    }
-
-    .stat-label {
-      font-size: 10px;
-      letter-spacing: .18em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-      margin-top: 6px;
-      display: block;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       PROGRAMME STAGE
-    ══════════════════════════════════════════════════════════ */
-    .programme-list {
-      list-style: none;
-      margin-top: 28px;
-    }
-
-    .programme-list li {
-      display: flex;
-      align-items: flex-start;
-      gap: 16px;
-      padding: 16px 0;
-      border-bottom: 1px solid rgba(201,168,76,.12);
-    }
-
-    .programme-list li:last-child {
-      border-bottom: none;
-    }
-
-    .prog-icon {
-      flex: 0 0 34px;
-      height: 34px;
-      border: 1px solid rgba(201,168,76,.5);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 14px;
-      color: var(--gold);
-      margin-top: 2px;
-    }
-
-    .prog-label {
-      font-size: 12px;
-      letter-spacing: .15em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 4px;
-    }
-
-    .prog-desc {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      line-height: 1.55;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       QUOTE / TESTIMONIAL
-    ══════════════════════════════════════════════════════════ */
-    .quote-section {
-      padding: 52px 48px;
-      background: url('https://images.unsplash.com/photo-1513519245088-0e12902e5a38?w=1200&q=80&fm=jpg') center/cover no-repeat;
-      position: relative;
-    }
-
-    .quote-section::before {
-      content: '';
-      position: absolute;
-      inset: 0;
-      background: rgba(12,12,12,.88);
-    }
-
-    .quote-inner {
-      position: relative;
-      z-index: 1;
-      text-align: center;
-    }
-
-    .quote-mark {
-      font-family: 'Playfair Display', serif;
-      font-size: 80px;
-      line-height: .6;
-      color: var(--gold);
-      opacity: .35;
-      margin-bottom: 16px;
-      display: block;
-    }
-
-    .quote-text {
-      font-family: 'Playfair Display', serif;
-      font-size: 20px;
-      font-style: italic;
-      color: var(--cream);
-      line-height: 1.55;
-      max-width: 500px;
-      margin: 0 auto 20px;
-    }
-
-    .quote-text em {
-      color: var(--gold-light);
-      font-style: normal;
-    }
-
-    .quote-author {
-      font-size: 10px;
-      letter-spacing: .28em;
-      color: var(--gold);
-      text-transform: uppercase;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       SPECIALISATIONS CHIPS
-    ══════════════════════════════════════════════════════════ */
-    .chips {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 8px;
-      margin-top: 20px;
-    }
-
-    .chip {
-      padding: 7px 16px;
-      border: 1px solid rgba(201,168,76,.4);
-      font-size: 10px;
-      letter-spacing: .18em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-      background: rgba(201,168,76,.05);
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       INFOGRAPHIC — PROCESS STEPS
-    ══════════════════════════════════════════════════════════ */
-    .steps {
-      margin-top: 28px;
-    }
-
-    .step {
-      display: flex;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 24px;
-    }
-
+      --bleu:  #1C2459;
+      --rouge: #DC0D17;
+      --blanc: #FFFFFF;
+      --noir:  #000721;
+      --vert:  #00667D;
+      --max-w: 640px;
+    }
+
+    body { background: #0a0d1a; font-family: 'Montserrat', sans-serif; color: var(--blanc); -webkit-font-smoothing: antialiased; }
+
+    .wrap { max-width: var(--max-w); margin: 0 auto; background: var(--noir); border: 1px solid rgba(28,36,89,.6); }
+
+    /* TOP BAR */
+    .top-bar { background: var(--bleu); text-align: center; padding: 9px 20px; font-size: 10.5px; letter-spacing: .2em; color: var(--blanc); text-transform: uppercase; }
+
+    /* HEADER */
+    .header { background: var(--noir); padding: 32px 40px; text-align: center; border-bottom: 3px solid var(--rouge); }
+    .logo-circle { display: inline-flex; align-items: center; justify-content: center; width: 68px; height: 68px; border-radius: 50%; border: 2px solid var(--rouge); font-family: 'Playfair Display', serif; font-size: 22px; font-weight: 700; color: var(--rouge); margin-bottom: 14px; }
+    .logo-name { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: .5em; color: rgba(255,255,255,.75); text-transform: uppercase; display: block; }
+    .logo-tag  { font-size: 9.5px; letter-spacing: .2em; color: var(--vert); text-transform: uppercase; margin-top: 5px; display: block; }
+
+    /* DIVIDER */
+    .divider { display: block; height: 1px; background: linear-gradient(90deg, transparent, var(--vert) 40%, var(--vert) 60%, transparent); }
+
+    /* HERO */
+    .hero { position: relative; min-height: 380px; display: flex; align-items: flex-end; overflow: hidden; }
+    .hero img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: brightness(.45) saturate(.8); }
+    .hero-overlay { position: absolute; inset: 0; background: linear-gradient(to bottom, rgba(0,7,33,.1) 0%, rgba(0,7,33,.9) 80%, var(--noir) 100%); }
+    .hero-content { position: relative; z-index: 2; padding: 36px 40px 40px; width: 100%; }
+    .kicker { font-size: 10px; letter-spacing: .3em; color: var(--vert); text-transform: uppercase; margin-bottom: 12px; display: block; }
+    .hero h1 { font-family: 'Playfair Display', serif; font-size: 34px; font-weight: 700; line-height: 1.2; color: var(--blanc); margin-bottom: 12px; }
+    .hero h1 em { font-style: italic; color: var(--rouge); }
+    .hero p { font-size: 13px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.7; max-width: 460px; margin-bottom: 24px; }
+
+    /* BUTTONS */
+    .btn { display: inline-block; padding: 13px 32px; font-family: 'Montserrat', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; text-decoration: none; }
+    .btn-red   { background: var(--rouge); color: var(--blanc); }
+    .btn-ghost { border: 1px solid var(--vert); color: var(--vert); margin-left: 12px; }
+
+    /* RIBBON */
+    .ribbon { background: var(--rouge); padding: 11px 20px; text-align: center; font-size: 10.5px; font-weight: 600; letter-spacing: .18em; text-transform: uppercase; color: var(--blanc); }
+    .ribbon span { margin: 0 10px; opacity: .5; }
+
+    /* SECTION */
+    .section { padding: 44px 40px; }
+    .section-blue { background: var(--bleu); }
+    .eyebrow { font-size: 9.5px; letter-spacing: .3em; color: var(--vert); text-transform: uppercase; margin-bottom: 10px; display: block; }
+    .section h2 { font-family: 'Playfair Display', serif; font-size: 24px; font-weight: 700; color: var(--blanc); line-height: 1.3; margin-bottom: 16px; }
+    .section h2 em { font-style: italic; color: var(--rouge); }
+    .body-text { font-size: 13px; font-weight: 300; color: rgba(255,255,255,.75); line-height: 1.75; }
+    .body-text strong { color: var(--blanc); font-weight: 600; }
+
+    /* STATS */
+    .stats { display: table; width: 100%; background: var(--bleu); padding: 36px 40px; }
+    .sc { display: table-cell; text-align: center; vertical-align: middle; padding: 0 6px; }
+    .ss { display: table-cell; width: 1px; background: rgba(255,255,255,.15); vertical-align: middle; }
+    .sc strong { font-family: 'Playfair Display', serif; font-size: 34px; color: var(--rouge); display: block; line-height: 1; }
+    .sc span   { font-size: 9.5px; letter-spacing: .16em; color: rgba(255,255,255,.6); text-transform: uppercase; margin-top: 5px; display: block; }
+
+    /* PROGRAMME (steps) */
+    .step { display: flex; gap: 16px; margin-bottom: 20px; }
     .step:last-child { margin-bottom: 0; }
+    .step-dot { flex: 0 0 32px; width: 32px; height: 32px; background: var(--rouge); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: 600; color: var(--blanc); flex-shrink: 0; }
+    .step-body { padding-top: 5px; }
+    .step-body strong { font-size: 12.5px; color: var(--blanc); display: block; margin-bottom: 3px; }
+    .step-body span   { font-size: 12px; font-weight: 300; color: rgba(255,255,255,.65); line-height: 1.5; }
 
-    .step-dot-col {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      flex: 0 0 28px;
-    }
+    /* PILLARS */
+    .pillar { display: flex; gap: 14px; align-items: flex-start; margin-bottom: 18px; }
+    .pillar:last-child { margin-bottom: 0; }
+    .pnum { width: 40px; height: 40px; border: 1px solid var(--vert); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: 'Playfair Display', serif; font-size: 15px; font-style: italic; color: var(--vert); }
+    .pillar strong { font-size: 11px; letter-spacing: .15em; color: var(--vert); text-transform: uppercase; display: block; margin-bottom: 3px; }
+    .pillar p { font-size: 12.5px; font-weight: 300; color: rgba(255,255,255,.7); line-height: 1.55; }
 
-    .step-dot {
-      width: 28px; height: 28px;
-      background: var(--gold);
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 11px;
-      font-weight: 600;
-      color: var(--noir);
-      flex-shrink: 0;
-    }
+    /* CHIPS */
+    .chips { display: flex; flex-wrap: wrap; gap: 7px; margin-top: 18px; }
+    .chip { padding: 6px 14px; border: 1px solid rgba(0,102,125,.5); font-size: 9.5px; letter-spacing: .15em; color: rgba(255,255,255,.6); text-transform: uppercase; background: rgba(0,102,125,.08); }
 
-    .step-line {
-      width: 1px;
-      flex: 1;
-      background: rgba(201,168,76,.25);
-      min-height: 32px;
-      margin-top: 4px;
-    }
+    /* QUOTE */
+    .quote { padding: 44px 40px; background: var(--bleu); text-align: center; border-top: 3px solid var(--rouge); border-bottom: 3px solid var(--rouge); }
+    .qmark { font-family: 'Playfair Display', serif; font-size: 70px; line-height: .5; color: var(--rouge); opacity: .4; display: block; margin-bottom: 14px; }
+    .qtext { font-family: 'Playfair Display', serif; font-size: 19px; font-style: italic; color: var(--blanc); line-height: 1.55; max-width: 480px; margin: 0 auto 16px; }
+    .qauthor { font-size: 9.5px; letter-spacing: .25em; color: var(--vert); text-transform: uppercase; }
 
-    .step-content {
-      padding-top: 3px;
-    }
+    /* CTA */
+    .cta { padding: 52px 40px; text-align: center; background: var(--noir); border-top: 1px solid rgba(28,36,89,.6); }
+    .cta-badge { display: inline-block; border: 1px solid var(--vert); padding: 6px 20px; font-size: 9.5px; letter-spacing: .28em; color: var(--vert); text-transform: uppercase; margin-bottom: 20px; }
+    .cta h2 { font-family: 'Playfair Display', serif; font-size: 28px; font-weight: 700; color: var(--blanc); margin-bottom: 12px; line-height: 1.3; }
+    .cta h2 em { font-style: italic; color: var(--rouge); }
+    .cta p { font-size: 13px; font-weight: 300; color: rgba(255,255,255,.7); max-width: 430px; margin: 0 auto 28px; line-height: 1.7; }
+    .cta-note { font-size: 10px; color: rgba(255,255,255,.35); margin-top: 14px; }
 
-    .step-title {
-      font-size: 13px;
-      font-weight: 600;
-      color: var(--cream);
-      letter-spacing: .04em;
-      margin-bottom: 4px;
-    }
+    /* FOOTER */
+    .footer { background: var(--bleu); padding: 30px 40px; text-align: center; border-top: 3px solid var(--rouge); }
+    .footer-logo { font-family: 'Playfair Display', serif; font-size: 12px; letter-spacing: .5em; color: rgba(255,255,255,.7); text-transform: uppercase; margin-bottom: 4px; }
+    .footer-tag  { font-size: 9px; letter-spacing: .2em; color: var(--vert); text-transform: uppercase; margin-bottom: 18px; }
+    .footer-links { font-size: 10px; color: rgba(255,255,255,.45); margin-bottom: 16px; }
+    .footer-links a { color: rgba(255,255,255,.45); text-decoration: none; }
+    .footer-links a:hover { color: var(--vert); }
+    .footer-links span { margin: 0 9px; opacity: .3; }
+    .footer-legal { font-size: 9.5px; color: rgba(255,255,255,.25); line-height: 1.7; }
+    .footer-legal a { color: rgba(255,255,255,.3); text-decoration: underline; }
 
-    .step-body {
-      font-size: 12.5px;
-      font-weight: 300;
-      color: var(--gray);
-      line-height: 1.55;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       INSTRUCTOR CARD
-    ══════════════════════════════════════════════════════════ */
-    .instructor-card {
-      display: table;
-      width: 100%;
-      margin-top: 24px;
-    }
-
-    .instructor-img-cell {
-      display: table-cell;
-      width: 90px;
-      vertical-align: top;
-    }
-
-    .instructor-img {
-      width: 82px; height: 82px;
-      object-fit: cover;
-      border: 1px solid rgba(201,168,76,.4);
-    }
-
-    .instructor-info {
-      display: table-cell;
-      vertical-align: middle;
-      padding-left: 20px;
-    }
-
-    .instructor-name {
-      font-family: 'Playfair Display', serif;
-      font-size: 17px;
-      font-weight: 600;
-      color: var(--cream);
-      margin-bottom: 4px;
-    }
-
-    .instructor-role {
-      font-size: 10.5px;
-      letter-spacing: .14em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 8px;
-    }
-
-    .instructor-bio {
-      font-size: 12.5px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      line-height: 1.6;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       GOLDEN CTA BLOCK
-    ══════════════════════════════════════════════════════════ */
-    .cta-block {
-      background: linear-gradient(160deg, #1a1508 0%, #0e0b04 60%, var(--noir) 100%);
-      padding: 60px 48px;
-      text-align: center;
-      border-top: 1px solid rgba(201,168,76,.3);
-      border-bottom: 1px solid rgba(201,168,76,.3);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .cta-block::before {
-      content: '';
-      position: absolute;
-      top: 50%; left: 50%;
-      transform: translate(-50%, -50%);
-      width: 500px; height: 300px;
-      background: radial-gradient(ellipse, rgba(201,168,76,.09) 0%, transparent 65%);
-      pointer-events: none;
-    }
-
-    .cta-date-badge {
-      display: inline-block;
-      border: 1px solid var(--gold);
-      padding: 7px 22px;
-      font-size: 10px;
-      letter-spacing: .3em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 24px;
-    }
-
-    .cta-title {
-      font-family: 'Playfair Display', serif;
-      font-size: 30px;
-      font-weight: 700;
-      color: var(--cream);
-      line-height: 1.3;
-      margin-bottom: 14px;
-    }
-
-    .cta-title em {
-      font-style: italic;
-      color: var(--gold-light);
-    }
-
-    .cta-body {
-      font-size: 13px;
-      font-weight: 300;
-      color: var(--cream-muted);
-      line-height: 1.7;
-      max-width: 460px;
-      margin: 0 auto 32px;
-    }
-
-    .cta-note {
-      font-size: 10.5px;
-      color: var(--gray);
-      margin-top: 16px;
-      letter-spacing: .06em;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       PARTNER LOGOS ROW
-    ══════════════════════════════════════════════════════════ */
-    .partners-row {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 8px 18px;
-      margin-top: 24px;
-    }
-
-    .partner-tag {
-      font-size: 9px;
-      letter-spacing: .22em;
-      color: var(--gray);
-      text-transform: uppercase;
-      opacity: .65;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       FOOTER
-    ══════════════════════════════════════════════════════════ */
-    .footer {
-      background: var(--noir);
-      padding: 36px 48px;
-      border-top: 1px solid rgba(201,168,76,.2);
-      text-align: center;
-    }
-
-    .footer-logo {
-      font-family: 'Playfair Display', serif;
-      font-size: 13px;
-      letter-spacing: .5em;
-      color: var(--cream-muted);
-      text-transform: uppercase;
-      margin-bottom: 6px;
-    }
-
-    .footer-tagline {
-      font-size: 9px;
-      letter-spacing: .25em;
-      color: var(--gold);
-      text-transform: uppercase;
-      margin-bottom: 22px;
-    }
-
-    .footer-links {
-      font-size: 10.5px;
-      color: var(--gray);
-      margin-bottom: 22px;
-    }
-
-    .footer-links a {
-      color: var(--gray);
-      text-decoration: none;
-    }
-
-    .footer-links a:hover { color: var(--gold); }
-
-    .footer-links span {
-      margin: 0 10px;
-      opacity: .35;
-    }
-
-    .footer-legal {
-      font-size: 10px;
-      color: #4a4540;
-      line-height: 1.7;
-      letter-spacing: .04em;
-    }
-
-    /* ══════════════════════════════════════════════════════════
-       RESPONSIVE
-    ══════════════════════════════════════════════════════════ */
-    @media (max-width: 620px) {
-      .section, .intro-letter, .stats-band,
-      .cta-block, .footer, .quote-section { padding-left: 24px; padding-right: 24px; }
-
-      .hero-content { padding-left: 24px; padding-right: 24px; }
-      .hero-title   { font-size: 28px; }
-      .header       { padding: 28px 24px; }
-
-      .stats-table  { display: block; }
-      .stat-cell    { display: block; margin-bottom: 28px; }
-      .stat-sep     { display: none; }
-
-      .gallery-row  { display: block; }
-      .gallery-cell { display: block; width: 100%; padding: 3px 0; }
-      .gallery-img  { height: 140px; }
-
-      .btn-ghost { display: block; margin: 12px 0 0 0; text-align: center; }
-
-      .pillar-grid, .pillar, .pillar-number, .pillar-body { display: block; }
-      .pillar-number { margin-bottom: 10px; }
-      .pillar { margin-bottom: 24px; }
-
-      .instructor-card, .instructor-img-cell, .instructor-info { display: block; }
-      .instructor-img-cell { margin-bottom: 14px; }
-      .instructor-info { padding-left: 0; }
+    @media (max-width: 580px) {
+      .section, .stats, .quote, .cta, .footer { padding-left: 20px; padding-right: 20px; }
+      .hero-content { padding-left: 20px; padding-right: 20px; }
+      .hero h1 { font-size: 26px; }
+      .stats { display: block; }
+      .sc { display: block; margin-bottom: 22px; }
+      .ss { display: none; }
+      .btn-ghost { display: block; margin: 10px 0 0 0; text-align: center; }
     }
   </style>
 </head>
 <body>
 
-<!-- Preheader text (email preview) -->
-<div class="preheader">
-  Vivez l'art du luxe de l'intérieur · Stage de Découverte EAC · Places limitées · Printemps 2026
+<div style="display:none;font-size:1px;color:transparent;line-height:0;max-height:0;overflow:hidden;">
+  Stage de Découverte EAC · Printemps 2026 · Places limitées · Inscription gratuite
 </div>
 
-<div class="email-wrapper">
+<div class="wrap">
 
-  <!-- ═══════════════════════════════════════════
-       TOP BAR
-  ═══════════════════════════════════════════ -->
-  <div class="top-bar">
-    Invitation exclusive &nbsp;·&nbsp; Stage de découverte &nbsp;·&nbsp; Printemps 2026
-  </div>
+  <div class="top-bar">Invitation exclusive &nbsp;·&nbsp; Stage de découverte &nbsp;·&nbsp; Printemps 2026</div>
 
-  <!-- ═══════════════════════════════════════════
-       HEADER
-  ═══════════════════════════════════════════ -->
   <header class="header">
-    <div class="logo-monogram">EAC</div>
+    <div class="logo-circle">EAC</div>
     <span class="logo-name">École des Arts &amp; Communication</span>
-    <span class="logo-tagline">L'excellence des industries créatives &amp; du luxe</span>
+    <span class="logo-tag">L'excellence des industries créatives &amp; du luxe</span>
   </header>
 
   <span class="divider"></span>
 
-  <!-- ═══════════════════════════════════════════
-       HERO
-  ═══════════════════════════════════════════ -->
+  <!-- HERO -->
   <section class="hero">
-    <img
-      class="hero-img"
-      src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1300&q=80&fm=jpg"
-      alt="Atelier de mode élégant"
-      width="660"
-    />
+    <img src="https://images.unsplash.com/photo-1558769132-cb1aea458c5e?w=1300&q=80&fm=jpg" alt="Atelier de mode" width="640" />
     <div class="hero-overlay"></div>
     <div class="hero-content">
-      <p class="hero-kicker">Stage de Découverte</p>
-      <h1 class="hero-title">
-        Et si votre passion<br>
-        devenait votre <em>métier&nbsp;?</em>
-      </h1>
-      <p class="hero-sub">
-        Immergez-vous dans l'univers du luxe, de la mode et de la culture
-        le temps d'une journée d'exception — conçue pour vous révéler
-        le parcours qui vous ressemble.
-      </p>
-      <a href="#inscription" class="btn-gold">Réserver ma place</a>
-      <a href="#programme" class="btn-ghost">Découvrir le programme</a>
+      <span class="kicker">Stage de Découverte</span>
+      <h1>Et si votre passion<br>devenait votre <em>métier&nbsp;?</em></h1>
+      <p>Immergez-vous dans l'univers du luxe, de la mode et de la culture le temps d'une journée d'exception — conçue pour vous révéler le parcours qui vous ressemble.</p>
+      <a href="#inscription" class="btn btn-red">Réserver ma place</a>
+      <a href="#programme" class="btn btn-ghost">Voir le programme</a>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       RIBBON
-  ═══════════════════════════════════════════ -->
-  <div class="ribbon">
-    Places limitées à 30 participants <span>◆</span> Printemps 2026 <span>◆</span> Inscription gratuite
-  </div>
+  <div class="ribbon">Places limitées à 30 participants <span>◆</span> Printemps 2026 <span>◆</span> Gratuit</div>
 
-  <!-- ═══════════════════════════════════════════
-       INTRO LETTER
-  ═══════════════════════════════════════════ -->
-  <section class="intro-letter">
-    <span class="eyebrow">Un mot de l'EAC</span>
-    <p class="section-body drop-cap">
-      Vous ressentez cet attrait irrésistible pour l'art de vivre, la création,
-      le raffinement ? Vous vous interrogez sur les métiers du luxe, de la mode
-      ou de la communication, mais vous ne savez pas encore par où commencer ?
-    </p>
-    <br />
-    <p class="section-body">
-      L'EAC vous ouvre ses portes pour une journée unique : <strong>le Stage de
-      Découverte</strong>. Rencontrez nos équipes pédagogiques, intégrez
-      temporairement un atelier de création, échangez avec des professionnels
-      en activité chez <strong>LVMH, Hermès, Chanel</strong> et bien d'autres — et
-      repartez avec une vision claire de votre avenir.
-    </p>
-    <br />
-    <p class="section-body">
-      Ce stage est <strong>gratuit, ouvert à tous</strong>, et conçu pour les
-      jeunes de Terminale à Bac +2 qui souhaitent explorer les métiers créatifs
-      avant de s'engager.
-    </p>
-  </section>
-
-  <span class="divider"></span>
-
-  <!-- ═══════════════════════════════════════════
-       GALLERY
-  ═══════════════════════════════════════════ -->
-  <div style="padding: 0; line-height: 0;">
-    <div class="gallery-row" style="border-spacing: 0;">
-      <div class="gallery-cell">
-        <img class="gallery-img"
-          src="https://images.unsplash.com/photo-1490481651871-ab68de25d43d?w=500&q=75&fm=jpg"
-          alt="Mode luxe" />
-      </div>
-      <div class="gallery-cell">
-        <img class="gallery-img"
-          src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=500&q=75&fm=jpg"
-          alt="Horlogerie" />
-      </div>
-      <div class="gallery-cell">
-        <img class="gallery-img"
-          src="https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=500&q=75&fm=jpg"
-          alt="Art de vivre" />
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       STATS BAND
-  ═══════════════════════════════════════════ -->
-  <div class="stats-band">
-    <div class="stats-table">
-      <div class="stat-cell">
-        <span class="stat-num">20<span class="stat-sup">+</span></span>
-        <span class="stat-label">Ans d'expertise</span>
-      </div>
-      <div class="stat-sep">&nbsp;</div>
-      <div class="stat-cell">
-        <span class="stat-num">94<span class="stat-sup">%</span></span>
-        <span class="stat-label">Insertion pro</span>
-      </div>
-      <div class="stat-sep">&nbsp;</div>
-      <div class="stat-cell">
-        <span class="stat-num">80<span class="stat-sup">+</span></span>
-        <span class="stat-label">Marques partenaires</span>
-      </div>
-      <div class="stat-sep">&nbsp;</div>
-      <div class="stat-cell">
-        <span class="stat-num">2<span class="stat-sup">500</span></span>
-        <span class="stat-label">Alumni actifs</span>
-      </div>
-    </div>
-  </div>
-
-  <!-- ═══════════════════════════════════════════
-       PROGRAMME DU STAGE
-  ═══════════════════════════════════════════ -->
-  <section class="section section-alt" id="programme">
-    <span class="eyebrow">Au programme</span>
-    <h2 class="section-title">Une journée pour <em>tout découvrir</em></h2>
-    <p class="section-body">
-      Une expérience dense, pensée pour allier inspiration, rencontres
-      et projection concrète dans votre avenir professionnel.
-    </p>
-
-    <div class="steps" style="margin-top: 36px;">
-
-      <div class="step">
-        <div class="step-dot-col">
-          <div class="step-dot">09</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-content">
-          <p class="step-title">Accueil &amp; Présentation de l'EAC</p>
-          <p class="step-body">Petit-déjeuner de bienvenue, tour des ateliers et rencontre avec la direction pédagogique.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-dot-col">
-          <div class="step-dot">10</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-content">
-          <p class="step-title">Atelier Immersif — Création &amp; Univers de Marque</p>
-          <p class="step-body">Participez à un atelier pratique animé par un professionnel du secteur : stylisme, direction artistique ou stratégie de marque de luxe.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-dot-col">
-          <div class="step-dot">12</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-content">
-          <p class="step-title">Déjeuner avec les étudiants &amp; Alumni</p>
-          <p class="step-body">Échangez librement avec ceux qui vivent la formation au quotidien et entendent leurs parcours inspirants.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-dot-col">
-          <div class="step-dot">14</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-content">
-          <p class="step-title">Table Ronde Professionnels du Luxe</p>
-          <p class="step-body">Directeurs de boutique, chefs de projet communication, brand managers — ils partagent leur quotidien et répondent à vos questions.</p>
-        </div>
-      </div>
-
-      <div class="step">
-        <div class="step-dot-col">
-          <div class="step-dot">16</div>
-          <div class="step-line"></div>
-        </div>
-        <div class="step-content">
-          <p class="step-title">Entretien Individuel d'Orientation</p>
-          <p class="step-body">Un conseiller pédagogique dédié vous accompagne pour identifier la spécialisation qui correspond à votre profil et à vos ambitions.</p>
-        </div>
-      </div>
-
-    </div>
-  </section>
-
-  <span class="divider"></span>
-
-  <!-- ═══════════════════════════════════════════
-       3 PILLARS
-  ═══════════════════════════════════════════ -->
+  <!-- INTRO -->
   <section class="section">
+    <span class="eyebrow">Un mot de l'EAC</span>
+    <p class="body-text">
+      L'EAC vous ouvre ses portes pour une <strong>journée unique</strong> : rencontrez nos équipes pédagogiques, intégrez un atelier de création et échangez avec des professionnels en activité chez <strong>LVMH, Hermès, Chanel</strong>.<br><br>
+      Ce stage est <strong>gratuit, sans engagement</strong>, ouvert aux jeunes de Terminale à Bac +2 souhaitant explorer les métiers créatifs avant de s'engager.
+    </p>
+  </section>
+
+  <span class="divider"></span>
+
+  <!-- STATS -->
+  <div class="stats">
+    <div class="sc"><strong>20<sup style="font-size:.55em">+</sup></strong><span>Ans d'expertise</span></div>
+    <div class="ss">&nbsp;</div>
+    <div class="sc"><strong>94<sup style="font-size:.55em">%</sup></strong><span>Insertion pro</span></div>
+    <div class="ss">&nbsp;</div>
+    <div class="sc"><strong>80<sup style="font-size:.55em">+</sup></strong><span>Marques partenaires</span></div>
+    <div class="ss">&nbsp;</div>
+    <div class="sc"><strong>2 500</strong><span>Alumni actifs</span></div>
+  </div>
+
+  <!-- PROGRAMME -->
+  <section class="section" id="programme">
+    <span class="eyebrow">Au programme</span>
+    <h2>Une journée pour <em>tout découvrir</em></h2>
+
+    <div class="step">
+      <div class="step-dot">09h</div>
+      <div class="step-body">
+        <strong>Accueil &amp; Présentation de l'EAC</strong>
+        <span>Petit-déjeuner de bienvenue, tour des ateliers et rencontre avec la direction pédagogique.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-dot">10h</div>
+      <div class="step-body">
+        <strong>Atelier Immersif — Création &amp; Univers de Marque</strong>
+        <span>Atelier pratique animé par un professionnel : stylisme, direction artistique ou stratégie de marque de luxe.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-dot">12h</div>
+      <div class="step-body">
+        <strong>Déjeuner avec les étudiants &amp; Alumni</strong>
+        <span>Échangez librement avec ceux qui vivent la formation au quotidien.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-dot">14h</div>
+      <div class="step-body">
+        <strong>Table Ronde Professionnels du Luxe</strong>
+        <span>Directeurs de boutique, chefs de projet, brand managers — ils répondent à vos questions.</span>
+      </div>
+    </div>
+    <div class="step">
+      <div class="step-dot">16h</div>
+      <div class="step-body">
+        <strong>Entretien Individuel d'Orientation</strong>
+        <span>Un conseiller pédagogique identifie la spécialisation qui correspond à votre profil.</span>
+      </div>
+    </div>
+  </section>
+
+  <span class="divider"></span>
+
+  <!-- PILLARS -->
+  <section class="section section-blue">
     <span class="eyebrow">Trois univers vous attendent</span>
-    <h2 class="section-title">Quelle sera votre <em>spécialisation&nbsp;?</em></h2>
+    <h2>Quelle sera votre <em>spécialisation&nbsp;?</em></h2>
 
-    <div class="pillar-grid" style="margin-top: 32px;">
-
-      <div class="pillar">
-        <div class="pillar-number">
-          <div class="pillar-num-inner"><em>I</em></div>
-        </div>
-        <div class="pillar-body">
-          <p class="pillar-label">Haute Joaillerie &amp; Horlogerie</p>
-          <p class="pillar-text">Gemmologie, retail de luxe, clientèle HNWI et univers des Maisons d'exception.</p>
-        </div>
+    <div class="pillar">
+      <div class="pnum"><em>I</em></div>
+      <div>
+        <strong>Haute Joaillerie &amp; Horlogerie</strong>
+        <p>Gemmologie, retail de luxe, clientèle HNWI et univers des Maisons d'exception.</p>
       </div>
-
-      <div class="pillar">
-        <div class="pillar-number">
-          <div class="pillar-num-inner"><em>II</em></div>
-        </div>
-        <div class="pillar-body">
-          <p class="pillar-label">Mode &amp; Lifestyle de Luxe</p>
-          <p class="pillar-text">Marketing de la mode, merchandising, digital luxury et direction d'événements.</p>
-        </div>
+    </div>
+    <div class="pillar">
+      <div class="pnum"><em>II</em></div>
+      <div>
+        <strong>Mode &amp; Lifestyle de Luxe</strong>
+        <p>Marketing de la mode, merchandising, digital luxury et direction d'événements.</p>
       </div>
-
-      <div class="pillar">
-        <div class="pillar-number">
-          <div class="pillar-num-inner"><em>III</em></div>
-        </div>
-        <div class="pillar-body">
-          <p class="pillar-label">Hôtellerie &amp; Art de Vivre</p>
-          <p class="pillar-text">Management palace, gastronomie, oenotourisme et expériences ultra-premium.</p>
-        </div>
+    </div>
+    <div class="pillar">
+      <div class="pnum"><em>III</em></div>
+      <div>
+        <strong>Hôtellerie &amp; Art de Vivre</strong>
+        <p>Management palace, gastronomie, oenotourisme et expériences ultra-premium.</p>
       </div>
-
     </div>
 
     <div class="chips">
-      <span class="chip">LVMH</span>
-      <span class="chip">Chanel</span>
-      <span class="chip">Hermès</span>
-      <span class="chip">Cartier</span>
-      <span class="chip">Kering</span>
-      <span class="chip">Dior</span>
-      <span class="chip">Richemont</span>
-      <span class="chip">Bulgari</span>
+      <span class="chip">LVMH</span><span class="chip">Chanel</span><span class="chip">Hermès</span>
+      <span class="chip">Cartier</span><span class="chip">Kering</span><span class="chip">Dior</span>
+      <span class="chip">Richemont</span><span class="chip">Bulgari</span>
     </div>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       QUOTE
-  ═══════════════════════════════════════════ -->
-  <section class="quote-section">
-    <div class="quote-inner">
-      <span class="quote-mark">"</span>
-      <p class="quote-text">
-        Ce stage m'a ouvert des portes que je ne savais même pas
-        qu'elles <em>existaient</em>. Aujourd'hui je manage une boutique
-        Louis Vuitton à Milan — et tout a commencé par cette journée.
-      </p>
-      <p class="quote-author">Camille Fontaine &nbsp;·&nbsp; Promo 2022 &nbsp;·&nbsp; Louis Vuitton, Milan</p>
-    </div>
+  <!-- QUOTE -->
+  <div class="quote">
+    <span class="qmark">"</span>
+    <p class="qtext">Ce stage m'a ouvert des portes que je ne savais même pas qu'elles existaient. Aujourd'hui je manage une boutique Louis Vuitton à Milan.</p>
+    <p class="qauthor">Camille Fontaine &nbsp;·&nbsp; Promo 2022 &nbsp;·&nbsp; Louis Vuitton, Milan</p>
+  </div>
+
+  <!-- CTA -->
+  <section class="cta" id="inscription">
+    <span class="cta-badge">Printemps 2026 · Journée Portes Ouvertes</span>
+    <h2>Réservez votre<br><em>journée d'immersion</em></h2>
+    <p>Gratuit, sans engagement, ouvert à tous du Bac à Bac +2. Places limitées à <strong style="color:#fff;">30 participants</strong>.</p>
+    <a href="#" class="btn btn-red" style="font-size:12px;padding:15px 40px;">Je réserve ma place gratuitement</a>
+    <p class="cta-note">Réponse garantie sous 48 h · Aucune expérience requise</p>
   </section>
 
-  <!-- ═══════════════════════════════════════════
-       INSTRUCTOR
-  ═══════════════════════════════════════════ -->
-  <section class="section section-dark">
-    <span class="eyebrow">Vos intervenants</span>
-    <h2 class="section-title">Des professionnels<br><em>au cœur de l'industrie</em></h2>
-
-    <div class="instructor-card">
-      <div class="instructor-img-cell">
-        <img class="instructor-img"
-          src="https://images.unsplash.com/photo-1573496799515-eebbb63814f2?w=200&q=80&fm=jpg"
-          alt="Isabelle Morand" />
-      </div>
-      <div class="instructor-info">
-        <p class="instructor-name">Isabelle Morand</p>
-        <p class="instructor-role">Directrice du Programme &nbsp;·&nbsp; Ancienne LVMH</p>
-        <p class="instructor-bio">20 ans de direction stratégique au sein des plus grandes Maisons. Elle guide chaque promotion vers l'excellence avec une pédagogie ancrée dans le réel.</p>
-      </div>
-    </div>
-
-    <div class="instructor-card" style="margin-top: 20px;">
-      <div class="instructor-img-cell">
-        <img class="instructor-img"
-          src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&q=80&fm=jpg"
-          alt="Alexandre Vernet" />
-      </div>
-      <div class="instructor-info">
-        <p class="instructor-name">Alexandre Vernet</p>
-        <p class="instructor-role">Lead Marketing &nbsp;·&nbsp; Consultant Richemont &amp; Kering</p>
-        <p class="instructor-bio">Consultant senior en stratégie de marque, il forme les futurs talents aux codes du luxe contemporain et au marketing d'influence haut de gamme.</p>
-      </div>
-    </div>
-  </section>
-
-  <span class="divider"></span>
-
-  <!-- ═══════════════════════════════════════════
-       CTA PRINCIPAL
-  ═══════════════════════════════════════════ -->
-  <section class="cta-block" id="inscription">
-    <div class="cta-date-badge">Printemps 2026 &nbsp;·&nbsp; Journée Portes Ouvertes</div>
-    <h2 class="cta-title">
-      Réservez votre<br>
-      <em>journée d'immersion</em>
-    </h2>
-    <p class="cta-body">
-      Gratuit, sans engagement, ouvert à tous les profils curieux
-      du Bac à Bac +2. Les places sont limitées à <strong>30 participants</strong>
-      pour garantir une expérience personnalisée et de qualité.
-    </p>
-    <a href="#" class="btn-gold" style="font-size: 12px; padding: 16px 44px;">
-      Je réserve ma place gratuitement
-    </a>
-    <p class="cta-note">
-      Réponse garantie sous 48 h · Aucune expérience dans le luxe requise
-    </p>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       PARTNERS
-  ═══════════════════════════════════════════ -->
-  <section class="section section-alt" style="text-align: center; padding-top: 40px; padding-bottom: 40px;">
-    <span class="eyebrow" style="margin-bottom: 8px;">Nos maisons partenaires</span>
-    <p class="section-body" style="font-size: 12px;">Vos futurs employeurs &amp; terrains de stage</p>
-    <div class="partners-row">
-      <span class="partner-tag">LVMH</span>
-      <span class="partner-tag">Chanel</span>
-      <span class="partner-tag">Hermès</span>
-      <span class="partner-tag">Kering</span>
-      <span class="partner-tag">Cartier</span>
-      <span class="partner-tag">Dior</span>
-      <span class="partner-tag">Bulgari</span>
-      <span class="partner-tag">Louis Vuitton</span>
-      <span class="partner-tag">Richemont</span>
-      <span class="partner-tag">Sephora</span>
-    </div>
-  </section>
-
-  <!-- ═══════════════════════════════════════════
-       FOOTER
-  ═══════════════════════════════════════════ -->
+  <!-- FOOTER -->
   <footer class="footer">
     <p class="footer-logo">EAC</p>
-    <p class="footer-tagline">École des Arts &amp; Communication &nbsp;·&nbsp; Paris</p>
-
+    <p class="footer-tag">École des Arts &amp; Communication · Paris</p>
     <div class="footer-links">
-      <a href="#">Site web</a>
-      <span>|</span>
-      <a href="#">Programme</a>
-      <span>|</span>
-      <a href="#">Nous contacter</a>
-      <span>|</span>
+      <a href="#">Site web</a><span>|</span>
+      <a href="#">Programme</a><span>|</span>
+      <a href="#">Nous contacter</a><span>|</span>
       <a href="#">Instagram</a>
     </div>
-
     <p class="footer-legal">
       Vous recevez cet e-mail car vous avez exprimé un intérêt pour l'EAC.<br>
       © 2026 EAC — École des Arts &amp; Communication. Tous droits réservés.<br>
-      <a href="#" style="color: #4a4540; text-decoration: underline;">Se désabonner</a>
-      &nbsp;·&nbsp;
-      <a href="#" style="color: #4a4540; text-decoration: underline;">Politique de confidentialité</a>
+      <a href="#">Se désabonner</a> &nbsp;·&nbsp; <a href="#">Politique de confidentialité</a>
     </p>
   </footer>
 
-</div><!-- /email-wrapper -->
+</div>
 </body>
 </html>
