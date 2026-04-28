@@ -410,6 +410,154 @@
     .field:focus { border-color: var(--teal); }
 
     .btn-success { background: var(--teal) !important; }
+
+    /* ── S0 — Badge card screen ───────────────────────────── */
+    #s0 {
+      background: linear-gradient(155deg, var(--dark) 0%, #00293a 55%, #004d5e 100%);
+      justify-content: center;
+      gap: 28px;
+      padding: 48px 24px 44px;
+    }
+
+    .badge-card {
+      background: rgba(255,255,255,.07);
+      border: 1px solid rgba(255,255,255,.14);
+      border-radius: 20px;
+      padding: 40px 28px 32px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 14px;
+      text-align: center;
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      box-shadow: 0 24px 64px rgba(0,0,0,.35);
+    }
+
+    .badge-card .logo { font-size: 3.25rem; }
+
+    .badge-card-school {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 700;
+      font-size: .9375rem;
+      letter-spacing: .06em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.78);
+    }
+
+    .badge-card-divider {
+      width: 44px; height: 2px;
+      background: var(--rouge);
+      border-radius: 1px;
+    }
+
+    .badge-card-accred {
+      font-weight: 500;
+      font-size: .6875rem;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: rgba(255,255,255,.42);
+    }
+
+    .s0-baseline {
+      text-align: center;
+      font-size: .875rem;
+      font-weight: 500;
+      color: rgba(255,255,255,.38);
+      line-height: 1.55;
+      letter-spacing: .01em;
+    }
+
+    /* ── RGPD checkbox ────────────────────────────────────── */
+    .rgpd-label {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      cursor: pointer;
+      margin-bottom: 4px;
+    }
+
+    .rgpd-check {
+      appearance: none;
+      -webkit-appearance: none;
+      flex-shrink: 0;
+      width: 18px; height: 18px;
+      margin-top: 1px;
+      border: 1.5px solid rgba(255,255,255,.28);
+      border-radius: 5px;
+      background: transparent;
+      cursor: pointer;
+      position: relative;
+      transition: border-color 200ms, background 200ms;
+    }
+    .rgpd-check:checked {
+      background: var(--teal);
+      border-color: var(--teal);
+    }
+    .rgpd-check:checked::after {
+      content: '';
+      position: absolute;
+      left: 4px; top: 1px;
+      width: 6px; height: 10px;
+      border: 2px solid #fff;
+      border-top: none;
+      border-left: none;
+      transform: rotate(45deg);
+    }
+
+    .rgpd-text {
+      font-size: .8rem;
+      line-height: 1.5;
+      color: rgba(255,255,255,.45);
+    }
+    .rgpd-text a { color: var(--teal); text-decoration: underline; }
+
+    /* ── Modal confirmation view ──────────────────────────── */
+    .modal-confirm {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      gap: 18px;
+      padding: 8px 0 4px;
+    }
+    .modal-confirm.show { display: flex; }
+
+    .confirm-icon {
+      width: 64px; height: 64px;
+      border-radius: 50%;
+      background: rgba(0,102,125,.18);
+      border: 1.5px solid var(--teal);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 1.75rem;
+    }
+
+    .confirm-title {
+      font-family: 'Cabinet Grotesk', sans-serif;
+      font-weight: 800;
+      font-size: 1.375rem;
+      letter-spacing: -0.02em;
+    }
+
+    .confirm-sub {
+      font-size: .9375rem;
+      color: rgba(255,255,255,.58);
+      line-height: 1.6;
+    }
+
+    .confirm-restart {
+      background: none;
+      border: none;
+      color: rgba(255,255,255,.4);
+      font-family: 'Satoshi', sans-serif;
+      font-size: .875rem;
+      font-weight: 500;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 4px;
+      transition: color 200ms;
+    }
+    .confirm-restart:hover { color: rgba(255,255,255,.7); }
   </style>
 </head>
 <body>
@@ -419,15 +567,32 @@
   <div class="modal">
     <div class="modal-handle"></div>
     <button class="modal-close" onclick="closeModal()" aria-label="Fermer">✕</button>
-    <p class="tag" style="margin-bottom:6px">Votre profil</p>
-    <h2 class="modal-title">Recevez votre analyse complète</h2>
-    <p class="modal-sub">Inscrivez-vous pour découvrir le programme qui correspond exactement à votre profil.</p>
-    <div class="form-group">
-      <input class="field" type="text"  placeholder="Prénom"   autocomplete="given-name">
-      <input class="field" type="email" placeholder="Email"    autocomplete="email">
-      <input class="field" type="tel"   placeholder="Téléphone (optionnel)" autocomplete="tel">
+
+    <!-- Form view -->
+    <div id="modal-form">
+      <p class="tag" id="modal-metier-tag" style="margin-bottom:6px">Votre profil</p>
+      <h2 class="modal-title">Réserve ton entretien</h2>
+      <p class="modal-sub">Un conseiller EAC te rappelle sous 48h.</p>
+      <div class="form-group">
+        <input class="field" id="f-prenom" type="text"  placeholder="Prénom *"    autocomplete="given-name"   required>
+        <input class="field" id="f-email"  type="email" placeholder="Email *"     autocomplete="email"        required>
+        <input class="field" id="f-tel"    type="tel"   placeholder="Téléphone *" autocomplete="tel"          required>
+        <input class="field" id="f-ville"  type="text"  placeholder="Ville *"     autocomplete="address-level2" required>
+      </div>
+      <label class="rgpd-label">
+        <input class="rgpd-check" type="checkbox" id="f-rgpd" required>
+        <span class="rgpd-text">J'accepte que mes données soient utilisées pour être recontacté(e) par EAC. <a href="#" onclick="return false">En savoir plus</a></span>
+      </label>
+      <button class="btn" id="submitBtn" onclick="submitForm()" style="margin-top:16px">Envoyer ma demande →</button>
     </div>
-    <button class="btn" id="submitBtn" onclick="submitForm()">Recevoir mon analyse →</button>
+
+    <!-- Confirmation view -->
+    <div class="modal-confirm" id="modal-confirm">
+      <div class="confirm-icon">✓</div>
+      <h3 class="confirm-title">Demande envoyée !</h3>
+      <p class="confirm-sub">Un conseiller EAC te contactera dans les 48h pour ton entretien.</p>
+      <button class="confirm-restart" onclick="restartFromModal()">Recommencer le quiz</button>
+    </div>
   </div>
 </div>
 
@@ -530,18 +695,17 @@ function hdr(s) {
   return `<div class="screen-header"><div class="logo">E<span class="a">A</span>C</div>${right}</div>`;
 }
 
-function buildHero(s) {
-  return `${hdr(s)}
-    <div class="hero-section">
-      <span class="badge-chip">Quiz professionnel</span>
-      <div class="accent"></div>
-      <h1 class="hero-title">CONTENU À VENIR</h1>
-      <p class="hero-body">CONTENU À VENIR</p>
-      <p class="baseline">L'école du marché de l'art, du luxe et de la culture</p>
+function buildHero() {
+  return `
+    <div class="badge-card">
+      <div class="logo">E<span class="a">A</span>C</div>
+      <p class="badge-card-school">École d'Art et de Culture</p>
+      <div class="badge-card-divider"></div>
+      <p class="badge-card-accred">Accréditation Visiteur</p>
     </div>
+    <p class="s0-baseline">L'école du marché de l'art,<br>du luxe et de la culture</p>
     <div class="bottom-wrap">
-      <button class="btn" onclick="go('s1')">Commencer →</button>
-      <p class="hint">2 minutes · 7 questions</p>
+      <button class="btn" onclick="go('s1')">Entrer →</button>
     </div>`;
 }
 
@@ -583,10 +747,22 @@ function buildResult(s) {
       <p class="screen-body">${d.body || s.body}</p>
     </div>
     <div class="bottom-wrap">
-      <button class="btn" onclick="openModal()">Recevoir mon analyse complète →</button>
+      <button class="btn" onclick="openModal('${s.metier}')">Réserve ton entretien →</button>
       <p class="hint" style="cursor:pointer" onclick="go('s0')">Recommencer</p>
     </div>`;
 }
+
+const METIER_LABELS = {
+  galeriste:      'Galeriste',
+  marchand:       "Marchand d'art",
+  commissaire:    "Commissaire d'exposition",
+  agent:          "Agent d'artiste",
+  programmateur:  'Programmateur culturel',
+  festival:       'Directeur de festival',
+  tendances:      'Analyste tendances',
+  community:      'Community manager art',
+  evenementiel:   'Chef de projet événementiel'
+};
 
 const BUILDERS = { hero:buildHero, question:buildQuestion, crescendo:buildCrescendo, result:buildResult };
 
@@ -674,7 +850,21 @@ function revealTitle(id) {
 ══════════════════════════════════════════════════════════════ */
 const overlay = document.getElementById('overlay');
 
-function openModal()  { overlay.classList.add('open'); }
+function openModal(metier) {
+  // Update métier tag
+  const tag = document.getElementById('modal-metier-tag');
+  if (tag) tag.textContent = METIER_LABELS[metier] || 'Votre profil';
+
+  // Reset to form view
+  document.getElementById('modal-form').style.display = '';
+  document.getElementById('modal-confirm').classList.remove('show');
+  const btn = document.getElementById('submitBtn');
+  btn.textContent = 'Envoyer ma demande →';
+  btn.disabled = false;
+
+  overlay.classList.add('open');
+}
+
 function closeModal() { overlay.classList.remove('open'); }
 
 function overlayClick(e) {
@@ -682,10 +872,33 @@ function overlayClick(e) {
 }
 
 function submitForm() {
-  const btn = document.getElementById('submitBtn');
-  btn.textContent = 'Envoyé ✓';
-  btn.classList.add('btn-success');
-  setTimeout(closeModal, 1600);
+  const prenom = document.getElementById('f-prenom').value.trim();
+  const email  = document.getElementById('f-email').value.trim();
+  const tel    = document.getElementById('f-tel').value.trim();
+  const ville  = document.getElementById('f-ville').value.trim();
+  const rgpd   = document.getElementById('f-rgpd').checked;
+
+  if (!prenom || !email || !tel || !ville) {
+    // Highlight empty required fields
+    [['f-prenom',prenom],['f-email',email],['f-tel',tel],['f-ville',ville]].forEach(([id,val]) => {
+      const el = document.getElementById(id);
+      el.style.borderColor = val ? '' : 'var(--rouge)';
+    });
+    return;
+  }
+  if (!rgpd) {
+    document.getElementById('f-rgpd').style.outline = '2px solid var(--rouge)';
+    return;
+  }
+
+  // Show confirmation
+  document.getElementById('modal-form').style.display = 'none';
+  document.getElementById('modal-confirm').classList.add('show');
+}
+
+function restartFromModal() {
+  closeModal();
+  setTimeout(() => go('s0'), 350);
 }
 
 /* ══════════════════════════════════════════════════════════════
