@@ -1,0 +1,14 @@
+services:
+  alone:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "8000:8000"
+    environment:
+      # Changez cette clé avant toute mise en production !
+      ALONE_API_KEY: ${ALONE_API_KEY:?Définissez ALONE_API_KEY dans .env}
+    volumes:
+      - alone-data:/data
+
+volumes:
+  alone-data:
