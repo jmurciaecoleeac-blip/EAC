@@ -119,6 +119,50 @@ def test_font_upload(client, tmp_path):
     assert "DejaVu Serif" in resp.json()["families"]
 
 
+def test_assets_flow(client, svg_bytes, red_image):
+    import io
+
+    headers = {"X-API-Key": API_KEY}
+    buf = io.BytesIO()
+    red_image.save(buf, format="PNG")
+
+    resp = client.post("/v1/assets",
+                       files={"file": ("Visuel Automne.png", buf.getvalue(), "image/png")},
+                       headers=headers)
+    assert resp.status_code == 201, resp.text
+    asset = resp.json()
+    assert asset["ref"] == f"asset:{asset['id']}"
+    assert asset["width"] == 300 and asset["height"] == 100
+
+    listed = client.get("/v1/assets", headers=headers).json()
+    assert [a["id"] for a in listed] == [asset["id"]]
+
+    raw = client.get(f"/v1/assets/{asset['id']}", headers=headers)
+    assert raw.status_code == 200
+    assert raw.content[:8] == b"\x89PNG\r\n\x1a\n"
+
+    # rendu utilisant la référence asset:
+    info = _upload_svg(client, svg_bytes)
+    resp = client.post(f"/v1/templates/{info['id']}/render",
+                       json={"data": {"photo": asset["ref"]}},
+                       headers=headers)
+    assert resp.status_code == 200, resp.text
+
+    # référence inconnue -> 422
+    resp = client.post(f"/v1/templates/{info['id']}/render",
+                       json={"data": {"photo": "asset:000000000000"}},
+                       headers=headers)
+    assert resp.status_code == 422
+
+    assert client.delete(f"/v1/assets/{asset['id']}", headers=headers).status_code == 204
+    assert client.get(f"/v1/assets/{asset['id']}", headers=headers).status_code == 404
+
+    resp = client.post("/v1/assets",
+                       files={"file": ("pas_une_image.txt", b"bonjour", "text/plain")},
+                       headers=headers)
+    assert resp.status_code == 422
+
+
 def test_idml_via_api(client, idml_path):
     resp = client.post("/v1/templates",
                        files={"file": ("mag.idml", idml_path.read_bytes(),

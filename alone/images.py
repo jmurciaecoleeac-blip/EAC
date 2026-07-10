@@ -55,6 +55,13 @@ def _download(url: str, settings: Settings) -> bytes:
 
 
 def _image_from_url(url: str, settings: Settings) -> Image.Image:
+    if url.startswith("asset:"):
+        from . import assets
+
+        try:
+            return assets.load_image(url[len("asset:"):].strip(), settings)
+        except assets.AssetNotFound:
+            raise ValueError_(f"Image inconnue dans la bibliothèque : {url!r}")
     if url.startswith("data:"):
         try:
             _, payload = url.split(",", 1)
@@ -63,7 +70,9 @@ def _image_from_url(url: str, settings: Settings) -> Image.Image:
             raise ValueError_("data: URI invalide")
         return _decode_image(data, "data URI")
     if not url.startswith(("http://", "https://")):
-        raise ValueError_(f"URL d'image non supportée : {url!r} (http/https/data: attendu)")
+        raise ValueError_(
+            f"URL d'image non supportée : {url!r} (http/https/data:/asset: attendu)"
+        )
     return _decode_image(_download(url, settings), url)
 
 

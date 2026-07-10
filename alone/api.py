@@ -16,7 +16,7 @@ from pathlib import Path
 from fastapi import Depends, FastAPI, File, Form, HTTPException, Request, UploadFile
 from fastapi.responses import FileResponse, JSONResponse
 
-from . import __version__
+from . import __version__, assets
 from .config import Settings, settings as default_settings
 from .engines import engine_for
 from .engines.base import RenderContext, TemplateParseError, UnsupportedTemplateError
@@ -45,8 +45,9 @@ SERVICE_MANIFEST = {
     "workflow": [
         "1. POST /v1/templates (multipart, champ 'file') pour déposer un template (.svg, .zip de SVG, .psd, .idml)",
         "2. GET /v1/templates/{id} pour lire les placeholders détectés (nom, type texte/image, page, position)",
-        "3. POST /v1/templates/{id}/render avec {data: {placeholder: valeur}} — valeur = texte, URL http(s)/data:, ou objet {text|url|b64, fit, color, align, size}",
-        "4. Télécharger les pages rendues via les URLs retournées",
+        "3. (optionnel) POST /v1/assets (multipart, champ 'file') pour déposer des images ; utilisez ensuite la référence 'asset:<id>' comme valeur",
+        "4. POST /v1/templates/{id}/render avec {data: {placeholder: valeur}} — valeur = texte, URL http(s)/data:/asset:, ou objet {text|url|b64, fit, color, align, size}",
+        "5. Télécharger les pages rendues via les URLs retournées",
     ],
     "docs": "/docs (OpenAPI)",
     "ui": "/ui (interface web de gestion)",
@@ -206,6 +207,40 @@ def create_app(settings: Settings | None = None) -> FastAPI:
             raise HTTPException(404, "Rendu inconnu")
         media = "image/jpeg" if filename.endswith(".jpg") else "image/png"
         return FileResponse(path, media_type=media)
+
+    # -- bibliothèque d'images (assets) ---------------------------------------
+
+    @app.post("/v1/assets", status_code=201, tags=["images"], dependencies=[auth])
+    async def upload_asset(file: UploadFile = File(...)) -> dict:
+        data = await file.read()
+        if len(data) > cfg.max_image_bytes:
+            raise HTTPException(413, "Image trop volumineuse")
+        if not data:
+            raise HTTPException(422, "Fichier vide")
+        try:
+            return assets.save_asset(file.filename or "image", data, cfg)
+        except assets.InvalidAsset as exc:
+            raise HTTPException(422, str(exc))
+
+    @app.get("/v1/assets", tags=["images"], dependencies=[auth])
+    def list_assets() -> list[dict]:
+        return assets.list_assets(cfg)
+
+    @app.get("/v1/assets/{asset_id}", tags=["images"], dependencies=[auth],
+             name="get_asset")
+    def get_asset(asset_id: str) -> FileResponse:
+        try:
+            return FileResponse(assets.find_path(asset_id, cfg))
+        except assets.AssetNotFound:
+            raise HTTPException(404, f"Image inconnue : {asset_id}")
+
+    @app.delete("/v1/assets/{asset_id}", status_code=204, tags=["images"],
+                dependencies=[auth])
+    def delete_asset(asset_id: str) -> None:
+        try:
+            assets.delete_asset(asset_id, cfg)
+        except assets.AssetNotFound:
+            raise HTTPException(404, f"Image inconnue : {asset_id}")
 
     # -- polices ---------------------------------------------------------------
 

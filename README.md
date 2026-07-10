@@ -159,7 +159,23 @@ curl -X POST http://vps:8000/v1/templates/abb8190c3fd0/render \
 Valeurs acceptées pour chaque zone :
 
 - **texte** : chaîne, ou objet `{"text": "...", "color": "#RRGGBB", "align": "left|center|right", "size": 18}` ;
-- **image** : URL `http(s)`/`data:`, ou objet `{"url"|"b64": "...", "fit": "cover|contain|stretch"}` (défaut `cover`).
+- **image** : URL `http(s)`/`data:`, référence `asset:<id>` (voir ci-dessous), ou
+  objet `{"url"|"b64": "...", "fit": "cover|contain|stretch"}` (défaut `cover`).
+
+### Déposer des images (bibliothèque d'assets)
+
+Quand les visuels ne sont pas accessibles par URL (fichiers locaux, images
+produites par l'agent), déposez-les d'abord dans la bibliothèque :
+
+```bash
+curl -X POST http://vps:8000/v1/assets -H "X-API-Key: $KEY" -F "file=@photo.jpg"
+# → {"id": "9c2e41ab07d3", "ref": "asset:9c2e41ab07d3", "width": 4000, ...}
+```
+
+…puis utilisez la référence retournée comme valeur : `"photo_1": "asset:9c2e41ab07d3"`.
+Dans l'interface `/ui`, chaque zone image a un bouton « Téléverser… » qui fait
+tout cela en un clic, et la section « Images » liste la bibliothèque.
+Routes : `GET /v1/assets` · `GET/DELETE /v1/assets/{id}`.
 
 Réponse : les URLs des pages rendues (`GET /v1/outputs/...`, même clé API),
 plus d'éventuels avertissements (placeholders sans valeur, approximations…).
