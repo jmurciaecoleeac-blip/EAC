@@ -75,6 +75,18 @@
     color: var(--ink-soft); font-size: .85rem; cursor: pointer; margin-bottom: .8rem;
   }
   #dropzone.drag { border-color: var(--gold); color: var(--gold); }
+  .dropmini {
+    border: 2px dashed var(--line); border-radius: 8px; padding: .7rem; text-align: center;
+    color: var(--ink-soft); font-size: .82rem; cursor: pointer; margin-bottom: .7rem;
+  }
+  .dropmini.drag { border-color: var(--gold); color: var(--gold); }
+  .asset { display: flex; align-items: center; gap: .5rem; padding: .35rem 0; border-bottom: 1px solid var(--line); font-size: .82rem; }
+  .asset .aname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .asset .adims { color: var(--ink-soft); font-family: var(--mono); font-size: .72rem; }
+  .asset button { padding: .15rem .5rem; font-size: .72rem; }
+  .imgfield { display: flex; gap: .4rem; }
+  .imgfield input { flex: 1; }
+  .imgfield button { white-space: nowrap; }
   details.fonts summary { cursor: pointer; color: var(--ink-soft); font-size: .85rem; }
   .famlist { font-size: .8rem; font-family: var(--mono); color: var(--ink-soft); margin: .5rem 0; max-height: 130px; overflow-y: auto; }
 </style>
@@ -97,6 +109,15 @@
       <input type="file" id="fileinput" accept=".svg,.zip,.psd,.psb,.idml" hidden>
       <div id="uploadmsg"></div>
       <div id="tpllist" aria-live="polite"><p class="muted">Chargement…</p></div>
+    </section>
+
+    <section>
+      <h2>Images</h2>
+      <div id="assetdrop" class="dropmini">Déposez ici les images à placer dans les
+        templates (ou cliquez)</div>
+      <input type="file" id="assetinput" accept="image/*" multiple hidden>
+      <div id="assetmsg"></div>
+      <div id="assetlist"></div>
     </section>
 
     <section>
@@ -146,7 +167,7 @@ const keyInput = $("apikey");
 keyInput.value = localStorage.getItem("alone_api_key") || "";
 keyInput.addEventListener("change", () => {
   localStorage.setItem("alone_api_key", keyInput.value);
-  loadTemplates(); loadFonts();
+  loadTemplates(); loadAssets(); loadFonts();
 });
 
 function headers(extra) {
@@ -255,14 +276,44 @@ function selectTemplate(t) {
     div.className = "field";
     const label = document.createElement("label");
     label.textContent = ph.type === "image"
-      ? `{{${ph.name}}} — URL d'image (http(s) ou data:)`
+      ? `{{${ph.name}}} — image (téléversez un fichier, ou collez une URL / réf asset:)`
       : `{{${ph.name}}} — texte`;
     const input = document.createElement(ph.type === "image" ? "input" : "textarea");
-    if (ph.type === "image") input.type = "url"; else input.rows = 1;
+    if (ph.type === "image") input.type = "text"; else input.rows = 1;
     input.dataset.name = ph.name;
     input.dataset.type = ph.type;
-    input.placeholder = ph.hints && ph.hints.sample ? ph.hints.sample : "";
-    div.append(label, input);
+    input.placeholder = ph.type === "image"
+      ? "asset:… ou https://…"
+      : (ph.hints && ph.hints.sample ? ph.hints.sample : "");
+    if (ph.type === "image") {
+      const wrap = document.createElement("div");
+      wrap.className = "imgfield";
+      const pick = document.createElement("button");
+      pick.type = "button";
+      pick.className = "ghost";
+      pick.textContent = "Téléverser…";
+      const filepick = document.createElement("input");
+      filepick.type = "file"; filepick.accept = "image/*"; filepick.hidden = true;
+      pick.addEventListener("click", () => filepick.click());
+      filepick.addEventListener("change", async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        pick.disabled = true; pick.textContent = "Envoi…";
+        try {
+          const asset = await uploadAsset(file);
+          input.value = asset.ref;
+        } catch (err) {
+          alert(err.message);
+        } finally {
+          pick.disabled = false; pick.textContent = "Téléverser…";
+          e.target.value = "";
+        }
+      });
+      wrap.append(input, pick, filepick);
+      div.append(label, wrap);
+    } else {
+      div.append(label, input);
+    }
     form.appendChild(div);
   }
   loadTemplates(); // rafraîchit la sélection visuelle
@@ -318,6 +369,75 @@ async function doRender() {
   }
 }
 
+// ---- bibliothèque d'images --------------------------------------------------
+
+async function uploadAsset(file) {
+  const form = new FormData();
+  form.append("file", file);
+  const asset = await (await api("/v1/assets", { method: "POST", body: form })).json();
+  loadAssets();
+  return asset;
+}
+
+async function loadAssets() {
+  const list = $("assetlist");
+  try {
+    const items = await (await api("/v1/assets")).json();
+    list.innerHTML = items.length ? "" : "<p class='muted'>Aucune image déposée.</p>";
+    for (const a of items) {
+      const row = document.createElement("div");
+      row.className = "asset";
+      const name = document.createElement("span");
+      name.className = "aname"; name.title = a.filename; name.textContent = a.filename;
+      const dims = document.createElement("span");
+      dims.className = "adims"; dims.textContent = `${a.width}×${a.height}`;
+      const copy = document.createElement("button");
+      copy.type = "button"; copy.className = "ghost"; copy.textContent = "copier la réf";
+      copy.title = a.ref;
+      copy.addEventListener("click", async () => {
+        try { await navigator.clipboard.writeText(a.ref); copy.textContent = "copiée !"; }
+        catch (e) { prompt("Référence à copier :", a.ref); }
+        setTimeout(() => { copy.textContent = "copier la réf"; }, 1200);
+      });
+      const del = document.createElement("button");
+      del.type = "button"; del.className = "ghost"; del.textContent = "✕";
+      del.title = "supprimer";
+      del.addEventListener("click", async () => {
+        if (!confirm(`Supprimer « ${a.filename} » ?`)) return;
+        try { await api(`/v1/assets/${a.id}`, { method: "DELETE" }); loadAssets(); }
+        catch (err) { alert(err.message); }
+      });
+      row.append(name, dims, copy, del);
+      list.appendChild(row);
+    }
+  } catch (err) {
+    list.innerHTML = ""; list.appendChild(errNode(err));
+  }
+}
+
+const adz = $("assetdrop"), ai = $("assetinput");
+adz.addEventListener("click", () => ai.click());
+ai.addEventListener("change", async (e) => {
+  const msg = $("assetmsg");
+  for (const file of e.target.files) {
+    msg.textContent = `Envoi de ${file.name}…`; msg.className = "muted";
+    try { await uploadAsset(file); msg.textContent = ""; }
+    catch (err) { msg.textContent = err.message; msg.className = "error"; }
+  }
+  e.target.value = "";
+});
+adz.addEventListener("dragover", (e) => { e.preventDefault(); adz.classList.add("drag"); });
+adz.addEventListener("dragleave", () => adz.classList.remove("drag"));
+adz.addEventListener("drop", async (e) => {
+  e.preventDefault(); adz.classList.remove("drag");
+  const msg = $("assetmsg");
+  for (const file of e.dataTransfer.files) {
+    msg.textContent = `Envoi de ${file.name}…`; msg.className = "muted";
+    try { await uploadAsset(file); msg.textContent = ""; }
+    catch (err) { msg.textContent = err.message; msg.className = "error"; }
+  }
+});
+
 // ---- polices ---------------------------------------------------------------
 
 async function loadFonts() {
@@ -363,6 +483,7 @@ dz.addEventListener("drop", (e) => {
 $("renderbtn").addEventListener("click", doRender);
 
 loadTemplates();
+loadAssets();
 loadFonts();
 </script>
 </body>
