@@ -30,5 +30,8 @@ alone = "alone.cli:main"
 [tool.setuptools.packages.find]
 include = ["alone*"]
 
+[tool.setuptools.package-data]
+alone = ["static/*"]
+
 [tool.pytest.ini_options]
 testpaths = ["tests"]

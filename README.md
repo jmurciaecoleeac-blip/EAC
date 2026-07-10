@@ -100,6 +100,14 @@ curl http://vps:8000/v1/fonts -H "X-API-Key: $KEY"   # familles disponibles
 Les polices manquantes sont remplacées par DejaVu Sans (avec avertissement
 dans les logs).
 
+## Interface web de gestion
+
+Une interface d'administration légère est servie par Alone lui-même sur
+**`http://vps:8000/ui`** (aucune dépendance externe) : saisie de la clé API,
+dépôt de templates par glisser-déposer, tableau des zones détectées,
+formulaire de test de rendu avec aperçu et téléchargement, gestion des
+polices. Idéale pour valider un template avant de le confier à l'agent IA.
+
 ## API REST
 
 Toutes les routes `/v1/*` exigent l'en-tête `X-API-Key`. La documentation

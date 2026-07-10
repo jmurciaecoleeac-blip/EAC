@@ -31,6 +31,14 @@ def test_root_manifest_and_health(client):
     assert manifest["service"] == "alone"
 
 
+def test_ui_served(client):
+    resp = client.get("/ui")
+    assert resp.status_code == 200
+    assert resp.headers["content-type"].startswith("text/html")
+    assert "Alone" in resp.text
+    assert "X-API-Key" in resp.text
+
+
 def test_auth_required(client, svg_bytes):
     assert client.get("/v1/templates").status_code == 401
     resp = client.post("/v1/templates",

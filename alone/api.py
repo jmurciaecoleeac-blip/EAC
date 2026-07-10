@@ -49,8 +49,11 @@ SERVICE_MANIFEST = {
         "4. Télécharger les pages rendues via les URLs retournées",
     ],
     "docs": "/docs (OpenAPI)",
+    "ui": "/ui (interface web de gestion)",
     "version": __version__,
 }
+
+STATIC_DIR = Path(__file__).parent / "static"
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -92,6 +95,12 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     @app.get("/health", tags=["service"])
     def health() -> dict:
         return {"status": "ok", "version": __version__}
+
+    @app.get("/ui", tags=["service"], include_in_schema=False)
+    def ui() -> FileResponse:
+        # La page est publique mais inerte : chaque appel de données qu'elle
+        # fait exige la clé API saisie par l'utilisateur.
+        return FileResponse(STATIC_DIR / "index.html", media_type="text/html")
 
     # -- templates -----------------------------------------------------------
 

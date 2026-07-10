@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Alone — gestion des templates</title>
+<style>
+  :root {
+    --bg: #101820; --panel: #172230; --panel-2: #1d2a3a;
+    --ink: #e8e4d8; --ink-soft: #93a0ae; --gold: #C9A227;
+    --line: #26313d; --ok: #7fb069; --err: #d64550;
+    --mono: ui-monospace, "SF Mono", Consolas, monospace;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--bg); color: var(--ink);
+    font-family: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+    font-size: 15px; line-height: 1.55;
+  }
+  header {
+    display: flex; align-items: center; gap: 1rem; flex-wrap: wrap;
+    padding: 1rem 1.5rem; border-bottom: 2px solid var(--gold);
+  }
+  header h1 { font-size: 1.15rem; margin: 0; letter-spacing: .14em; }
+  header h1 span { color: var(--gold); }
+  header .spacer { flex: 1; }
+  main { max-width: 1200px; margin: 0 auto; padding: 1.5rem; display: grid; gap: 1.5rem; grid-template-columns: 340px 1fr; }
+  @media (max-width: 900px) { main { grid-template-columns: 1fr; } }
+
+  h2 { font-size: .8rem; letter-spacing: .18em; text-transform: uppercase; color: var(--gold); margin: 0 0 .8rem; }
+  section { background: var(--panel); border: 1px solid var(--line); border-radius: 8px; padding: 1.1rem 1.2rem; }
+  .stack { display: flex; flex-direction: column; gap: 1.5rem; min-width: 0; }
+
+  input[type=text], input[type=password], input[type=url], input[type=number], textarea, select {
+    width: 100%; background: var(--bg); color: var(--ink); border: 1px solid var(--line);
+    border-radius: 5px; padding: .45rem .6rem; font: inherit;
+  }
+  input:focus, textarea:focus, select:focus, button:focus { outline: 2px solid var(--gold); outline-offset: 1px; }
+  label { font-size: .8rem; color: var(--ink-soft); display: block; margin-bottom: .2rem; }
+  button {
+    background: var(--gold); color: #101820; border: none; border-radius: 5px;
+    padding: .5rem 1rem; font: inherit; font-weight: 600; cursor: pointer;
+  }
+  button.ghost { background: transparent; color: var(--ink-soft); border: 1px solid var(--line); font-weight: 400; }
+  button:disabled { opacity: .5; cursor: wait; }
+
+  .tpl { padding: .6rem .7rem; border: 1px solid var(--line); border-radius: 6px; margin-bottom: .55rem; cursor: pointer; background: var(--panel-2); }
+  .tpl:hover, .tpl.active { border-color: var(--gold); }
+  .tpl .name { font-weight: 600; }
+  .tpl .meta { font-size: .78rem; color: var(--ink-soft); font-family: var(--mono); }
+  .badge {
+    display: inline-block; font-size: .68rem; font-family: var(--mono); letter-spacing: .05em;
+    border: 1px solid var(--gold); color: var(--gold); border-radius: 3px; padding: 0 .35rem; margin-right: .4rem;
+  }
+  .row { display: flex; gap: .6rem; align-items: end; flex-wrap: wrap; }
+  .row > div { flex: 1; min-width: 110px; }
+
+  table { border-collapse: collapse; width: 100%; font-size: .85rem; }
+  th, td { text-align: left; padding: .4rem .5rem; border-bottom: 1px solid var(--line); }
+  th { color: var(--ink-soft); font-size: .72rem; text-transform: uppercase; letter-spacing: .1em; }
+  td code { font-family: var(--mono); color: var(--gold); }
+
+  .field { margin-bottom: .75rem; }
+  .warn { color: var(--gold); font-size: .82rem; }
+  .error { color: var(--err); font-size: .85rem; white-space: pre-wrap; }
+  .okmsg { color: var(--ok); font-size: .85rem; }
+  .muted { color: var(--ink-soft); font-size: .85rem; }
+  .renders { display: flex; flex-wrap: wrap; gap: 1rem; margin-top: 1rem; }
+  .renders figure { margin: 0; max-width: 380px; }
+  .renders img { max-width: 100%; border: 1px solid var(--line); border-radius: 4px; display: block; }
+  .renders figcaption { font-size: .78rem; color: var(--ink-soft); margin-top: .3rem; }
+  .renders a { color: var(--gold); }
+  #dropzone {
+    border: 2px dashed var(--line); border-radius: 8px; padding: 1rem; text-align: center;
+    color: var(--ink-soft); font-size: .85rem; cursor: pointer; margin-bottom: .8rem;
+  }
+  #dropzone.drag { border-color: var(--gold); color: var(--gold); }
+  details.fonts summary { cursor: pointer; color: var(--ink-soft); font-size: .85rem; }
+  .famlist { font-size: .8rem; font-family: var(--mono); color: var(--ink-soft); margin: .5rem 0; max-height: 130px; overflow-y: auto; }
+</style>
+</head>
+<body>
+<header>
+  <h1>ALONE <span>·</span> GESTION DES TEMPLATES</h1>
+  <div class="spacer"></div>
+  <div style="min-width:260px">
+    <label for="apikey">Clé API (X-API-Key)</label>
+    <input type="password" id="apikey" placeholder="collez votre clé…" autocomplete="off">
+  </div>
+</header>
+
+<main>
+  <div class="stack">
+    <section>
+      <h2>Templates</h2>
+      <div id="dropzone">Déposez un fichier ici ou cliquez<br>(.svg, .zip de SVG, .psd, .idml)</div>
+      <input type="file" id="fileinput" accept=".svg,.zip,.psd,.psb,.idml" hidden>
+      <div id="uploadmsg"></div>
+      <div id="tpllist" aria-live="polite"><p class="muted">Chargement…</p></div>
+    </section>
+
+    <section>
+      <h2>Polices</h2>
+      <details class="fonts">
+        <summary>Familles installées / ajouter (.ttf, .otf, .zip)</summary>
+        <div class="famlist" id="famlist"></div>
+        <input type="file" id="fontinput" accept=".ttf,.otf,.ttc,.zip">
+        <div id="fontmsg" style="margin-top:.4rem"></div>
+      </details>
+    </section>
+  </div>
+
+  <div class="stack">
+    <section id="detail" hidden>
+      <h2 id="dtitle">Template</h2>
+      <div id="dwarnings"></div>
+      <div style="overflow-x:auto"><table id="phtable"></table></div>
+    </section>
+
+    <section id="renderer" hidden>
+      <h2>Tester un rendu</h2>
+      <form id="renderform"></form>
+      <div class="row" style="margin-top:.8rem">
+        <div><label for="rpages">Pages (ex. 1,3 — vide = toutes)</label><input type="text" id="rpages"></div>
+        <div><label for="rscale">Échelle</label><input type="number" id="rscale" value="1" min="0.1" max="8" step="0.1"></div>
+        <div><label for="rformat">Format</label><select id="rformat"><option>png</option><option>jpg</option></select></div>
+        <div style="flex:0"><button id="renderbtn" type="button">Générer</button></div>
+      </div>
+      <div id="rendermsg" style="margin-top:.6rem"></div>
+      <div class="renders" id="renders"></div>
+    </section>
+
+    <section id="empty">
+      <p class="muted">Sélectionnez un template à gauche (ou déposez-en un) pour voir ses zones
+      éditables et tester un rendu.</p>
+    </section>
+  </div>
+</main>
+
+<script>
+"use strict";
+const $ = (id) => document.getElementById(id);
+let currentTemplate = null;
+
+const keyInput = $("apikey");
+keyInput.value = localStorage.getItem("alone_api_key") || "";
+keyInput.addEventListener("change", () => {
+  localStorage.setItem("alone_api_key", keyInput.value);
+  loadTemplates(); loadFonts();
+});
+
+function headers(extra) {
+  const h = Object.assign({}, extra);
+  if (keyInput.value) h["X-API-Key"] = keyInput.value;
+  return h;
+}
+
+async function api(path, options = {}) {
+  options.headers = headers(options.headers);
+  const resp = await fetch(path, options);
+  if (!resp.ok) {
+    let detail = resp.statusText;
+    try { detail = (await resp.json()).detail || detail; } catch (e) { /* texte brut */ }
+    throw new Error(resp.status === 401 ? "Clé API absente ou invalide (champ en haut à droite)." : detail);
+  }
+  return resp;
+}
+
+// ---- templates -----------------------------------------------------------
+
+async function loadTemplates() {
+  const list = $("tpllist");
+  try {
+    const templates = await (await api("/v1/templates")).json();
+    list.innerHTML = templates.length ? "" : "<p class='muted'>Aucun template pour l'instant.</p>";
+    for (const t of templates) {
+      const div = document.createElement("div");
+      div.className = "tpl" + (currentTemplate && currentTemplate.id === t.id ? " active" : "");
+      div.innerHTML = `<span class="badge"></span><span class="name"></span>
+        <div class="meta"></div>`;
+      div.querySelector(".badge").textContent = t.format;
+      div.querySelector(".name").textContent = t.name;
+      div.querySelector(".meta").textContent =
+        `${t.pages} page(s) · ${t.placeholders.length} zone(s) · ${t.id}`;
+      div.addEventListener("click", () => selectTemplate(t));
+      list.appendChild(div);
+    }
+  } catch (err) {
+    list.innerHTML = "";
+    list.appendChild(errNode(err));
+  }
+}
+
+function errNode(err) {
+  const p = document.createElement("p");
+  p.className = "error";
+  p.textContent = err.message || String(err);
+  return p;
+}
+
+async function uploadTemplate(file) {
+  const msg = $("uploadmsg");
+  msg.textContent = "Envoi et analyse en cours…"; msg.className = "muted";
+  const form = new FormData();
+  form.append("file", file);
+  try {
+    const info = await (await api("/v1/templates", { method: "POST", body: form })).json();
+    msg.textContent = `« ${info.name} » ajouté : ${info.placeholders.length} zone(s) détectée(s).`;
+    msg.className = "okmsg";
+    await loadTemplates();
+    selectTemplate(info);
+  } catch (err) {
+    msg.textContent = err.message; msg.className = "error";
+  }
+}
+
+function selectTemplate(t) {
+  currentTemplate = t;
+  $("empty").hidden = true;
+  $("detail").hidden = false;
+  $("renderer").hidden = false;
+  $("renders").innerHTML = "";
+  $("rendermsg").textContent = "";
+  $("dtitle").textContent = `${t.name} — ${t.format}, ${t.pages} page(s)`;
+
+  const dw = $("dwarnings");
+  dw.innerHTML = "";
+  for (const w of t.warnings || []) {
+    const p = document.createElement("p"); p.className = "warn"; p.textContent = "⚠ " + w;
+    dw.appendChild(p);
+  }
+
+  const table = $("phtable");
+  table.innerHTML = "<tr><th>Zone</th><th>Type</th><th>Page</th><th>Cadre (pt/px)</th><th>Indices</th></tr>";
+  for (const ph of t.placeholders) {
+    const tr = document.createElement("tr");
+    const bbox = ph.bbox ? `${Math.round(ph.bbox.width)} × ${Math.round(ph.bbox.height)}` : "—";
+    const hints = Object.entries(ph.hints || {}).map(([k, v]) => `${k}: ${v}`).join(", ") || "—";
+    tr.innerHTML = `<td><code></code></td><td></td><td></td><td></td><td></td>`;
+    tr.children[0].firstChild.textContent = `{{${ph.name}}}`;
+    tr.children[1].textContent = ph.type === "image" ? "image" : "texte";
+    tr.children[2].textContent = ph.page;
+    tr.children[3].textContent = bbox;
+    tr.children[4].textContent = hints;
+    table.appendChild(tr);
+  }
+
+  const form = $("renderform");
+  form.innerHTML = "";
+  const seen = new Set();
+  for (const ph of t.placeholders) {
+    if (seen.has(ph.name)) continue;
+    seen.add(ph.name);
+    const div = document.createElement("div");
+    div.className = "field";
+    const label = document.createElement("label");
+    label.textContent = ph.type === "image"
+      ? `{{${ph.name}}} — URL d'image (http(s) ou data:)`
+      : `{{${ph.name}}} — texte`;
+    const input = document.createElement(ph.type === "image" ? "input" : "textarea");
+    if (ph.type === "image") input.type = "url"; else input.rows = 1;
+    input.dataset.name = ph.name;
+    input.dataset.type = ph.type;
+    input.placeholder = ph.hints && ph.hints.sample ? ph.hints.sample : "";
+    div.append(label, input);
+    form.appendChild(div);
+  }
+  loadTemplates(); // rafraîchit la sélection visuelle
+}
+
+// ---- rendu ---------------------------------------------------------------
+
+async function doRender() {
+  if (!currentTemplate) return;
+  const btn = $("renderbtn"), msg = $("rendermsg"), out = $("renders");
+  btn.disabled = true; msg.textContent = "Rendu en cours…"; msg.className = "muted";
+  out.innerHTML = "";
+  const data = {};
+  for (const input of $("renderform").querySelectorAll("[data-name]")) {
+    if (input.value.trim()) data[input.dataset.name] = input.value.trim();
+  }
+  const body = {
+    data,
+    format: $("rformat").value,
+    scale: parseFloat($("rscale").value) || 1,
+  };
+  const pages = $("rpages").value.trim();
+  if (pages) body.pages = pages.split(",").map((p) => parseInt(p.trim(), 10)).filter(Boolean);
+  try {
+    const result = await (await api(`/v1/templates/${currentTemplate.id}/render`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    })).json();
+    msg.innerHTML = "";
+    for (const w of result.warnings || []) {
+      const p = document.createElement("p"); p.className = "warn"; p.textContent = "⚠ " + w;
+      msg.appendChild(p);
+    }
+    for (const page of result.pages) {
+      const resp = await api(page.url);
+      const blobUrl = URL.createObjectURL(await resp.blob());
+      const fig = document.createElement("figure");
+      const img = document.createElement("img");
+      img.src = blobUrl; img.alt = `Page ${page.page}`;
+      const cap = document.createElement("figcaption");
+      const a = document.createElement("a");
+      a.href = blobUrl; a.download = `${currentTemplate.name}_${page.filename}`;
+      a.textContent = "télécharger";
+      cap.append(`Page ${page.page} — ${page.width}×${page.height} px · `, a);
+      fig.append(img, cap);
+      out.appendChild(fig);
+    }
+  } catch (err) {
+    msg.innerHTML = ""; msg.appendChild(errNode(err));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+// ---- polices ---------------------------------------------------------------
+
+async function loadFonts() {
+  try {
+    const data = await (await api("/v1/fonts")).json();
+    const names = Object.entries(data.families)
+      .map(([fam, styles]) => `${fam} (${styles.join(", ")})`).sort();
+    $("famlist").textContent = names.join(" · ") || "Aucune police déposée.";
+  } catch (err) {
+    $("famlist").textContent = "";
+  }
+}
+
+$("fontinput").addEventListener("change", async (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const msg = $("fontmsg");
+  msg.textContent = "Installation…"; msg.className = "muted";
+  const form = new FormData();
+  form.append("file", file);
+  try {
+    await api("/v1/fonts", { method: "POST", body: form });
+    msg.textContent = "Police installée."; msg.className = "okmsg";
+    loadFonts();
+  } catch (err) {
+    msg.textContent = err.message; msg.className = "error";
+  }
+  e.target.value = "";
+});
+
+// ---- upload (clic + glisser-déposer) ---------------------------------------
+
+const dz = $("dropzone"), fi = $("fileinput");
+dz.addEventListener("click", () => fi.click());
+fi.addEventListener("change", (e) => { if (e.target.files[0]) uploadTemplate(e.target.files[0]); e.target.value = ""; });
+dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("drag"); });
+dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+dz.addEventListener("drop", (e) => {
+  e.preventDefault(); dz.classList.remove("drag");
+  if (e.dataTransfer.files[0]) uploadTemplate(e.dataTransfer.files[0]);
+});
+
+$("renderbtn").addEventListener("click", doRender);
+
+loadTemplates();
+loadFonts();
+</script>
+</body>
+</html>
