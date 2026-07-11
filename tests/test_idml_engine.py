@@ -50,6 +50,30 @@ def test_layer_named_frames_promoted(idml_path, fonts):
     assert g > 120 and r < 80
 
 
+def test_override_keeps_per_line_styles():
+    """Ligne N du texte de remplacement = style du paragraphe N d'origine."""
+    from alone.engines.idml_engine import IdmlEngine, _Paragraph, _Run
+
+    paras = [
+        _Paragraph(runs=[_Run("SORTIE", size=40.0, font="Cabinet Grotesk",
+                              font_style="Bold", color=(255, 255, 255, 255))],
+                   align="center"),
+        _Paragraph(runs=[_Run("OPÉRA", size=34.0, font="Neue Haas",
+                              color=(255, 255, 255, 255))], align="center"),
+    ]
+    value = TextValue(text="SORTIE EAC\nPALAIS GARNIER\nTROISIÈME LIGNE")
+    out = IdmlEngine()._override_paragraphs(paras, value)
+    assert [p.runs[0].size for p in out] == [40.0, 34.0, 34.0]
+    assert [p.runs[0].font for p in out] == ["Cabinet Grotesk", "Neue Haas", "Neue Haas"]
+    assert all(p.align == "center" for p in out)
+
+    # les options explicites priment
+    forced = IdmlEngine()._override_paragraphs(
+        paras, TextValue(text="A\nB", font="DejaVu Sans", size=20, align="left"))
+    assert all(p.runs[0].font == "DejaVu Sans" and p.runs[0].size == 20
+               and p.align == "left" for p in forced)
+
+
 def test_opacity_blend(idml_path, fonts):
     """Rectangle bleu à 50 % d'opacité sur fond blanc : couleur mélangée."""
     ctx = RenderContext(values={}, fonts=fonts, pages=[1])

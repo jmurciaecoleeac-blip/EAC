@@ -171,7 +171,7 @@ class PsdEngine(Engine):
         style = extract_text_style(layer)
         size = value.size or style.get("size") or max(12.0, h * 0.8)
         color = parse_color(value.color, default=style.get("color", (0, 0, 0, 255)))
-        font = ctx.fonts.load(style.get("font"), size)
+        font = ctx.fonts.load(value.font or style.get("font"), size)
 
         draw = ImageDraw.Draw(canvas)
         align = value.align or "left"

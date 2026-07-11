@@ -166,7 +166,11 @@ curl -X POST http://vps:8000/v1/templates/abb8190c3fd0/render \
 
 Valeurs acceptées pour chaque zone :
 
-- **texte** : chaîne, ou objet `{"text": "...", "color": "#RRGGBB", "align": "left|center|right", "size": 18}` ;
+- **texte** : chaîne, ou objet `{"text": "...", "font": "Cabinet Grotesk", "color": "#RRGGBB", "align": "left|center|right", "size": 18}`.
+  Sans option explicite, **chaque ligne du nouveau texte reprend le style de la
+  ligne correspondante du bloc d'origine** (titre gras + sous-titre dans une
+  autre fonte restent fidèles) ; `font`/`size`/`color`/`align` s'appliquent
+  alors à tout le bloc ;
 - **image** : URL `http(s)`/`data:`, référence `asset:<id>` (voir ci-dessous), ou
   objet `{"url"|"b64": "...", "fit": "cover|contain|stretch"}` (défaut `cover`).
 
