@@ -169,7 +169,6 @@ class _IdmlDoc:
         self.stories = self._load_stories(designmap)
         self.pages = self._load_pages(designmap)
         self._promote_named_layers()
-        self._sort_by_layer_stack()
 
     # -- calques --------------------------------------------------------------
 
@@ -234,20 +233,11 @@ class _IdmlDoc:
                     "dans le panneau Calques (flèche du calque > double-clic sur l'objet)."
                 )
 
-    def _sort_by_layer_stack(self) -> None:
-        """Trie les blocs par empilement des calques (arrière-plan d'abord)."""
-        if not self.layers:
-            return
-        top = len(self.layers)
-
-        def rank(frame: _Frame) -> tuple:
-            info = self.layers.get(frame.layer_id or "")
-            # premier calque du designmap = premier plan → dessiné en dernier
-            depth = (top - info["index"]) if info else 0
-            return (depth, frame.seq)
-
-        for page in self.pages:
-            page.frames.sort(key=rank)
+    # NOTE : aucun tri par calque n'est nécessaire — InDesign sérialise les
+    # blocs d'un spread dans l'ordre d'empilement global (arrière-plan vers
+    # premier plan, calque par calque). L'ordre du document fait foi ; un tri
+    # supplémentaire basé sur l'ordre des <Layer> du designmap s'était révélé
+    # faux sur des fichiers réels (images recouvrant tout le rendu).
 
     def _xml(self, name: str):
         if name not in self._names:
