@@ -119,6 +119,10 @@ class _Frame:
     has_graphic: bool = False
     embedded_image: bytes | None = None
     graphic_href: str | None = None
+    layer_id: str | None = None
+    seq: int = 0  # ordre de rencontre dans le spread
+    opacity: float = 1.0  # opacité InDesign (0-1)
+    content_type: str | None = None  # ContentType InDesign (GraphicType/TextType…)
 
 
 @dataclass
@@ -161,8 +165,84 @@ class _IdmlDoc:
         if designmap is None:
             raise TemplateParseError("IDML invalide : designmap.xml manquant")
         self.colors = self._load_colors()
+        self.layers = self._load_layers(designmap)
         self.stories = self._load_stories(designmap)
         self.pages = self._load_pages(designmap)
+        self._promote_named_layers()
+        self._sort_by_layer_stack()
+
+    # -- calques --------------------------------------------------------------
+
+    def _load_layers(self, designmap) -> dict[str, dict]:
+        """Calques du document : {id: {name, index, visible}}.
+
+        Dans le designmap, les calques sont listés du premier plan vers
+        l'arrière-plan (même ordre que le panneau Calques d'InDesign).
+        """
+        layers: dict[str, dict] = {}
+        for idx, layer in enumerate(designmap.iter("Layer")):
+            self_id = layer.get("Self")
+            if self_id:
+                layers[self_id] = {
+                    "name": (layer.get("Name") or "").strip(),
+                    "index": idx,
+                    "visible": layer.get("Visible", "true") != "false",
+                }
+        return layers
+
+    _DEFAULT_LAYER_RE = re.compile(
+        r"^(calque|layer|ebene|capa|livello|camada|laag|lager)\s*\d*$", re.IGNORECASE)
+
+    def _promote_named_layers(self) -> None:
+        """Un calque nommé qui contient un seul bloc de contenu devient éditable.
+
+        Les designers nomment souvent le calque (« image 1 », « texte sortie »)
+        plutôt que l'objet lui-même : si le calque porte un nom personnalisé et
+        n'abrite qu'un bloc de contenu, ce bloc hérite du nom.
+        """
+        by_layer: dict[str, list[_Frame]] = {}
+        for page in self.pages:
+            for frame in page.frames:
+                if frame.layer_id:
+                    by_layer.setdefault(frame.layer_id, []).append(frame)
+
+        for layer_id, frames in by_layer.items():
+            info = self.layers.get(layer_id)
+            if not info or not info["name"]:
+                continue
+            raw = info["name"]
+            name = find_placeholder_name(raw)
+            if name is None:
+                if self._DEFAULT_LAYER_RE.match(raw):
+                    continue  # « Calque 1 », « Layer 2 »… : nom par défaut
+                name = raw
+            content = [f for f in frames
+                       if f.name is None
+                       and (f.tag == "TextFrame" or f.has_graphic
+                            or f.content_type == "GraphicType")]
+            if len(content) == 1:
+                content[0].name, content[0].auto = name, True
+            elif len(content) > 1:
+                self.warnings.append(
+                    f"Calque « {raw} » : {len(content)} blocs de contenu, impossible de "
+                    "savoir lequel rendre éditable — nommez l'objet {{" + name + "}} "
+                    "dans le panneau Calques (flèche du calque > double-clic sur l'objet)."
+                )
+
+    def _sort_by_layer_stack(self) -> None:
+        """Trie les blocs par empilement des calques (arrière-plan d'abord)."""
+        if not self.layers:
+            return
+        top = len(self.layers)
+
+        def rank(frame: _Frame) -> tuple:
+            info = self.layers.get(frame.layer_id or "")
+            # premier calque du designmap = premier plan → dessiné en dernier
+            depth = (top - info["index"]) if info else 0
+            return (depth, frame.seq)
+
+        for page in self.pages:
+            page.frames.sort(key=rank)
 
     def _xml(self, name: str):
         if name not in self._names:
@@ -320,17 +400,24 @@ class _IdmlDoc:
                         best, best_d = (page, x0, y0), d
                 return best
 
-            self._collect_frames(spread, Matrix(), assign)
+            self._seq = 0
+            self._collect_frames(spread, Matrix(), assign, None)
         return pages
 
-    def _collect_frames(self, parent, outer: Matrix, assign) -> None:
+    def _collect_frames(self, parent, outer: Matrix, assign, layer_id: str | None) -> None:
         for item in parent:
             if not isinstance(item.tag, str):
                 continue
             tag = etree.QName(item).localname
+            item_layer = item.get("ItemLayer") or layer_id
+            if item.get("Visible") == "false":
+                continue
+            layer_info = self.layers.get(item_layer or "")
+            if layer_info and not layer_info["visible"]:
+                continue
             if tag == "Group":
                 m = outer.compose(Matrix.parse(item.get("ItemTransform")))
-                self._collect_frames(item, m, assign)
+                self._collect_frames(item, m, assign, item_layer)
                 continue
             if tag not in _FRAME_TAGS:
                 continue
@@ -359,9 +446,20 @@ class _IdmlDoc:
             auto = False
             if name is None and raw_name:
                 name, auto = raw_name, True
-            fill = self.resolve_color(item.get("FillColor"))
-            stroke = self.resolve_color(item.get("StrokeColor"))
+            fill = self._tinted(self.resolve_color(item.get("FillColor")),
+                                item.get("FillTint"))
+            stroke = self._tinted(self.resolve_color(item.get("StrokeColor")),
+                                  item.get("StrokeTint"))
             weight = float(item.get("StrokeWeight", 0) or 0)
+
+            # opacité InDesign : <TransparencySetting><BlendingSetting Opacity="50"/>
+            opacity = 1.0
+            blending = item.find("TransparencySetting/BlendingSetting")
+            if blending is not None:
+                try:
+                    opacity = max(0.0, min(1.0, float(blending.get("Opacity", 100)) / 100))
+                except ValueError:
+                    opacity = 1.0
 
             embedded, href, has_graphic = None, None, False
             for child in item:
@@ -391,11 +489,33 @@ class _IdmlDoc:
                 has_graphic=has_graphic,
                 embedded_image=embedded,
                 graphic_href=href,
+                layer_id=item_layer,
+                seq=self._seq,
+                opacity=opacity,
+                content_type=item.get("ContentType"),
             ))
+            self._seq += 1
             if rotated:
                 self.warnings.append(
                     f"Page {page.number} : bloc pivoté rendu sans rotation (approximation)"
                 )
+
+    @staticmethod
+    def _tinted(color: tuple | None, tint_raw: str | None) -> tuple | None:
+        """Applique la teinte InDesign (Tint 0-100 : mélange vers le blanc)."""
+        if color is None or not tint_raw:
+            return color
+        try:
+            tint = float(tint_raw)
+        except ValueError:
+            return color
+        if not 0 <= tint < 100:
+            return color
+        t = tint / 100
+        r, g, b, a = color
+        return (round(r * t + 255 * (1 - t)),
+                round(g * t + 255 * (1 - t)),
+                round(b * t + 255 * (1 - t)), a)
 
 
 # ---------------------------------------------------------------------------
@@ -448,6 +568,18 @@ class IdmlEngine(Engine):
                         "exporté en image ou nommez le bloc {{...}} pour le remplir via l'API."
                     )
 
+        bracket_re = re.compile(r"\[([^\[\]\n]{2,60})\]")
+        tokens = {m.group(1).strip() for paras in doc.stories.values()
+                  for p in paras for m in bracket_re.finditer(p.text)}
+        if tokens:
+            sample = sorted(tokens)[0]
+            warnings.append(
+                "Texte à trous détecté avec des crochets simples : "
+                + ", ".join(f"[{t}]" for t in sorted(tokens))
+                + f". Écrivez plutôt {{{{{sample}}}}} (doubles accolades) pour rendre "
+                "ce fragment éditable individuellement."
+            )
+
         auto_names = sorted({ph.name for ph in placeholders if ph.hints.get("auto")})
         if auto_names:
             warnings.append(
@@ -495,30 +627,57 @@ class IdmlEngine(Engine):
         box = (round(x0), round(y0), round(max(x1, x0 + 1)), round(max(y1, y0 + 1)))
         value = ctx.values.get(frame.name) if frame.name else None
 
+        def with_opacity(color: tuple) -> tuple:
+            r, g, b, a = color
+            return (r, g, b, round(a * frame.opacity))
+
+        def paint_shape(fill: tuple | None, outline: tuple | None, width: int = 0) -> None:
+            """Dessine avec un vrai fondu alpha (ImageDraw écraserait les pixels)."""
+            fill = with_opacity(fill) if fill else None
+            outline = with_opacity(outline) if outline else None
+            translucent = any(c and c[3] < 255 for c in (fill, outline))
+            target_draw = draw
+            layer = None
+            if translucent:
+                layer = Image.new("RGBA", canvas.size, (0, 0, 0, 0))
+                target_draw = ImageDraw.Draw(layer)
+            shape = target_draw.ellipse if frame.tag == "Oval" else target_draw.rectangle
+            kwargs = {}
+            if fill:
+                kwargs["fill"] = fill
+            if outline and width:
+                kwargs["outline"] = outline
+                kwargs["width"] = width
+            if kwargs:
+                shape(box, **kwargs)
+            if layer is not None:
+                canvas.alpha_composite(layer)
+
+        def paint_image(img: Image.Image, fit: str) -> None:
+            fitted = fit_image(img, box[2] - box[0], box[3] - box[1], fit)
+            if frame.opacity < 1.0:
+                alpha = fitted.getchannel("A").point(lambda a: round(a * frame.opacity))
+                fitted.putalpha(alpha)
+            canvas.alpha_composite(fitted, (box[0], box[1]))
+
         # fond et contour
-        shape = draw.ellipse if frame.tag == "Oval" else draw.rectangle
-        if frame.fill:
-            shape(box, fill=frame.fill)
-        if frame.stroke and frame.stroke_weight > 0:
-            shape(box, outline=frame.stroke,
-                  width=max(1, round(frame.stroke_weight * s)))
+        paint_shape(frame.fill,
+                    frame.stroke if frame.stroke_weight > 0 else None,
+                    max(1, round(frame.stroke_weight * s)) if frame.stroke_weight > 0 else 0)
 
         # contenu image
         if isinstance(value, ImageValue):
-            fitted = fit_image(value.image, box[2] - box[0], box[3] - box[1], value.fit)
-            canvas.alpha_composite(fitted, (box[0], box[1]))
+            paint_image(value.image, value.fit)
             return
-        if frame.has_graphic:
+        if frame.has_graphic or frame.content_type == "GraphicType":
             if frame.embedded_image:
                 try:
-                    img = Image.open(io.BytesIO(frame.embedded_image))
-                    fitted = fit_image(img, box[2] - box[0], box[3] - box[1], "cover")
-                    canvas.alpha_composite(fitted, (box[0], box[1]))
+                    paint_image(Image.open(io.BytesIO(frame.embedded_image)), "cover")
                     return
                 except OSError:
                     pass
-            if not frame.fill:
-                draw.rectangle(box, fill=(210, 210, 210, 255))
+            if not frame.fill and frame.has_graphic:
+                paint_shape((210, 210, 210, 255), None)
             return
 
         # contenu texte

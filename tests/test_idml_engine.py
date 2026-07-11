@@ -31,6 +31,31 @@ def test_render_auto_named_frame(idml_path, fonts):
     assert img.size == (533, 400)
 
 
+def test_layer_named_frame_promoted(idml_path, fonts):
+    """Un calque nommé « cadre photo » avec un seul bloc devient une zone image."""
+    result = IdmlEngine().inspect(idml_path)
+    by_name = {ph.name: ph for ph in result.placeholders}
+    ph = by_name["cadre photo"]
+    assert ph.type == "image" and ph.page == 2
+    assert ph.hints["auto"] is True
+
+    ctx = RenderContext(values={
+        "cadre photo": ImageValue(image=Image.new("RGB", (200, 200), (10, 160, 10))),
+    }, fonts=fonts, pages=[2])
+    [(_, img)] = IdmlEngine().render(idml_path, ctx)
+    r, g, b, a = img.getpixel((80, 333))  # dans le cadre (20..140, 210..290 pt)
+    assert g > 120 and r < 80
+
+
+def test_opacity_blend(idml_path, fonts):
+    """Rectangle bleu à 50 % d'opacité sur fond blanc : couleur mélangée."""
+    ctx = RenderContext(values={}, fonts=fonts, pages=[1])
+    [(_, img)] = IdmlEngine().render(idml_path, ctx)
+    r, g, b, a = img.getpixel((400, 306))  # zone du voile (200..400, 200..260 pt)
+    # bleu (20,60,160) à 50 % sur blanc -> ~(137,157,207)
+    assert 110 < r < 165 and 130 < g < 185 and b > 180
+
+
 def test_render_pages_and_colors(idml_path, fonts):
     ctx = RenderContext(values={
         "titre": TextValue(text="Édition Spéciale"),
