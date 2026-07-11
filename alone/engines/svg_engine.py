@@ -168,7 +168,7 @@ class _SvgDoc:
             # placeholders {{nom}} directement dans le texte
             if tag == "text":
                 for m in PLACEHOLDER_RE.finditer(_full_text(el)):
-                    n = m.group(1)
+                    n = m.group(1).strip()
                     if n not in seen:
                         seen.add(n)
                         found.append(Placeholder(name=n, type="text", page=self.page,
@@ -211,7 +211,7 @@ class _SvgDoc:
 
     def _substitute_inline(self, text_el, ctx: RenderContext) -> None:
         def repl(m: re.Match) -> str:
-            v = ctx.values.get(m.group(1))
+            v = ctx.values.get(m.group(1).strip())
             return v.text if isinstance(v, TextValue) else m.group(0)
 
         for node, attr in list(_iter_text_nodes(text_el)):

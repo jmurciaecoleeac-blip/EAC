@@ -108,7 +108,8 @@ def _path_points(item) -> list[tuple[float, float]]:
 @dataclass
 class _Frame:
     tag: str  # Rectangle / Oval / Polygon / TextFrame
-    name: str | None  # nom de placeholder ({{...}}) si présent
+    name: str | None  # nom de placeholder si présent
+    auto: bool  # True : bloc nommé sans {{...}}, promu placeholder automatiquement
     bounds: tuple[float, float, float, float]  # en points, repère page (x0, y0, x1, y1)
     rotated: bool
     fill: tuple | None
@@ -348,7 +349,16 @@ class _IdmlDoc:
             page, ox, oy = target
             rotated = abs(m.b) > 1e-6 or abs(m.c) > 1e-6
 
-            name = find_placeholder_name(item.get("Name") or "")
+            # Un nom posé à la main dans le panneau Calques est toujours
+            # intentionnel : {{nom}} explicite, ou nom libre promu placeholder
+            # (InDesign écrit "$ID/…" pour les objets non nommés).
+            raw_name = (item.get("Name") or "").strip()
+            if raw_name.startswith("$ID"):
+                raw_name = ""
+            name = find_placeholder_name(raw_name)
+            auto = False
+            if name is None and raw_name:
+                name, auto = raw_name, True
             fill = self.resolve_color(item.get("FillColor"))
             stroke = self.resolve_color(item.get("StrokeColor"))
             weight = float(item.get("StrokeWeight", 0) or 0)
@@ -371,6 +381,7 @@ class _IdmlDoc:
             page.frames.append(_Frame(
                 tag=tag,
                 name=name,
+                auto=auto,
                 bounds=(min(xs) - ox, min(ys) - oy, max(xs) - ox, max(ys) - oy),
                 rotated=rotated,
                 fill=fill,
@@ -407,6 +418,8 @@ class IdmlEngine(Engine):
                     seen.add(frame.name)
                     ph_type = "text" if frame.tag == "TextFrame" else "image"
                     hints = {}
+                    if frame.auto:
+                        hints["auto"] = True
                     if ph_type == "text" and frame.story_id:
                         paras = doc.stories.get(frame.story_id, [])
                         sample = " ".join(p.text for p in paras).strip()
@@ -421,9 +434,10 @@ class IdmlEngine(Engine):
                 elif frame.tag == "TextFrame" and frame.story_id:
                     paras = doc.stories.get(frame.story_id, [])
                     for m in PLACEHOLDER_RE.finditer(" ".join(p.text for p in paras)):
-                        if m.group(1) not in seen:
-                            seen.add(m.group(1))
-                            placeholders.append(Placeholder(name=m.group(1), type="text",
+                        n = m.group(1).strip()
+                        if n not in seen:
+                            seen.add(n)
+                            placeholders.append(Placeholder(name=n, type="text",
                                                             page=page.number, bbox=bbox,
                                                             hints={"inline": True}))
                 if (frame.has_graphic and not frame.name
@@ -434,6 +448,13 @@ class IdmlEngine(Engine):
                         "exporté en image ou nommez le bloc {{...}} pour le remplir via l'API."
                     )
 
+        auto_names = sorted({ph.name for ph in placeholders if ph.hints.get("auto")})
+        if auto_names:
+            warnings.append(
+                "Blocs nommés sans {{...}} rendus éditables automatiquement : "
+                + ", ".join(f"« {n} »" for n in auto_names)
+                + ". Pour un contrôle explicite, nommez-les {{" + auto_names[0] + "}}."
+            )
         warnings.append(
             "Rendu IDML simplifié : aplats, textes et images. Les effets avancés "
             "(dégradés, ombres, habillage…) ne sont pas reproduits."
@@ -525,7 +546,7 @@ class IdmlEngine(Engine):
 
     def _substitute_inline(self, paras: list[_Paragraph], ctx: RenderContext) -> list[_Paragraph]:
         def repl(m: re.Match) -> str:
-            v = ctx.values.get(m.group(1))
+            v = ctx.values.get(m.group(1).strip())
             return v.text if isinstance(v, TextValue) else m.group(0)
 
         out = []

@@ -6,6 +6,7 @@ DESIGNMAP = """<?xml version="1.0" encoding="UTF-8"?>
   <idPkg:Graphic src="Resources/Graphic.xml"/>
   <idPkg:Story src="Stories/Story_u10.xml"/>
   <idPkg:Story src="Stories/Story_u11.xml"/>
+  <idPkg:Story src="Stories/Story_u12.xml"/>
   <idPkg:Spread src="Spreads/Spread_u1.xml"/>
   <idPkg:Spread src="Spreads/Spread_u2.xml"/>
 </Document>"""
@@ -53,8 +54,25 @@ SPREAD2 = """<?xml version="1.0" encoding="UTF-8"?>
       <PathPointType Anchor="360 150"/><PathPointType Anchor="0 150"/>
     </PathPointArray></GeometryPathType></PathGeometry>
   </TextFrame>
+  <TextFrame Self="tf3" Name="Texte nom Sortie" ParentStory="u12" ItemTransform="1 0 0 1 -180 80">
+    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
+      <PathPointType Anchor="0 0"/><PathPointType Anchor="360 0"/>
+      <PathPointType Anchor="360 40"/><PathPointType Anchor="0 40"/>
+    </PathPointArray></GeometryPathType></PathGeometry>
+  </TextFrame>
  </Spread>
 </idPkg:Spread>"""
+
+STORY12 = """<?xml version="1.0" encoding="UTF-8"?>
+<idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging">
+ <Story Self="u12">
+  <ParagraphStyleRange>
+   <CharacterStyleRange PointSize="16" AppliedFont="DejaVu Sans">
+    <Content>Sortie du texte par défaut</Content>
+   </CharacterStyleRange>
+  </ParagraphStyleRange>
+ </Story>
+</idPkg:Story>"""
 
 STORY10 = """<?xml version="1.0" encoding="UTF-8"?>
 <idPkg:Story xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging">
@@ -90,6 +108,7 @@ def build(path: str) -> str:
         zf.writestr("Spreads/Spread_u2.xml", SPREAD2)
         zf.writestr("Stories/Story_u10.xml", STORY10)
         zf.writestr("Stories/Story_u11.xml", STORY11)
+        zf.writestr("Stories/Story_u12.xml", STORY12)
     return path
 
 

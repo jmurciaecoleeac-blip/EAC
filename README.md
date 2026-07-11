@@ -35,8 +35,16 @@ entre doubles accolades :
 - `{{titre}}`, `{{sous_titre}}` sur un **bloc de texte** → zone texte ;
 - `{{photo_1}}`, `{{logo}}` sur un **rectangle ou un cadre image** → zone image.
 
-Tout le reste (calques non nommés `{{…}}`) est rendu tel quel. Un placeholder
-peut aussi être écrit **directement dans un texte** : « Contact : {{email}} ».
+Les noms sont libres : espaces et accents acceptés (`{{Texte nom Sortie}}`,
+`{{prénom}}`…). Tout le reste (calques non nommés `{{…}}`) est rendu tel quel.
+Un placeholder peut aussi être écrit **directement dans un texte** :
+« Contact : {{email}} ».
+
+**Cas particulier InDesign** : un bloc renommé à la main dans le panneau
+Calques est toujours intentionnel — Alone le rend donc éditable **même sans
+accolades** (un bloc nommé `Texte nom Sortie` devient la zone
+`"Texte nom Sortie"`, signalée `auto` dans l'inspection). Les accolades
+restent recommandées pour l'explicite.
 
 ### Côté Illustrator (cas typique : 7 plans de travail)
 

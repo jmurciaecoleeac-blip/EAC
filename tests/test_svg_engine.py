@@ -10,6 +10,15 @@ def test_decode_illustrator_id():
     assert _decode_ai_id("simple") == "simple"
 
 
+def test_placeholder_names_with_spaces_and_accents():
+    from alone.models import find_placeholder_name
+
+    assert find_placeholder_name("{{Texte nom Sortie}}") == "Texte nom Sortie"
+    assert find_placeholder_name("{{ prénom }}") == "prénom"
+    assert find_placeholder_name("{{image 1}}") == "image 1"
+    assert find_placeholder_name("sans accolades") is None
+
+
 def test_inspect_finds_placeholders(svg_path):
     result = SvgEngine().inspect(svg_path)
     assert result.format == "svg"
