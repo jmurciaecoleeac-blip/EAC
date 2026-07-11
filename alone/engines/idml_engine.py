@@ -220,12 +220,17 @@ class _IdmlDoc:
                        if f.name is None
                        and (f.tag == "TextFrame" or f.has_graphic
                             or f.content_type == "GraphicType")]
-            if len(content) == 1:
-                content[0].name, content[0].auto = name, True
-            elif len(content) > 1:
+            kinds = {"text" if f.tag == "TextFrame" else "image" for f in content}
+            if len(kinds) == 1:
+                # Tous du même type : la même valeur alimente chaque bloc.
+                # Cas typique : la photo d'une page posée deux fois (grand
+                # arrière-plan sous un voile + premier plan encadré).
+                for f in content:
+                    f.name, f.auto = name, True
+            elif len(kinds) > 1:
                 self.warnings.append(
-                    f"Calque « {raw} » : {len(content)} blocs de contenu, impossible de "
-                    "savoir lequel rendre éditable — nommez l'objet {{" + name + "}} "
+                    f"Calque « {raw} » : blocs texte et image mélangés, impossible de "
+                    "savoir lesquels rendre éditables — nommez les objets {{" + name + "}} "
                     "dans le panneau Calques (flèche du calque > double-clic sur l'objet)."
                 )
 

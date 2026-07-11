@@ -63,6 +63,12 @@ SPREAD2 = """<?xml version="1.0" encoding="UTF-8"?>
       <PathPointType Anchor="360 150"/><PathPointType Anchor="0 150"/>
     </PathPointArray></GeometryPathType></PathGeometry>
   </TextFrame>
+  <Rectangle Self="r5" ItemLayer="lay_photo" ContentType="GraphicType" ItemTransform="1 0 0 1 140 -140">
+    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
+      <PathPointType Anchor="0 0"/><PathPointType Anchor="60 0"/>
+      <PathPointType Anchor="60 60"/><PathPointType Anchor="0 60"/>
+    </PathPointArray></GeometryPathType></PathGeometry>
+  </Rectangle>
   <Rectangle Self="r3" ItemLayer="lay_photo" ContentType="GraphicType" ItemTransform="1 0 0 1 -180 60">
     <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
       <PathPointType Anchor="0 0"/><PathPointType Anchor="120 0"/>

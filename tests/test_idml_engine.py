@@ -31,8 +31,9 @@ def test_render_auto_named_frame(idml_path, fonts):
     assert img.size == (533, 400)
 
 
-def test_layer_named_frame_promoted(idml_path, fonts):
-    """Un calque nommé « cadre photo » avec un seul bloc devient une zone image."""
+def test_layer_named_frames_promoted(idml_path, fonts):
+    """Un calque nommé « cadre photo » rend ses blocs image éditables ;
+    la même image alimente les deux cadres du calque (fond + premier plan)."""
     result = IdmlEngine().inspect(idml_path)
     by_name = {ph.name: ph for ph in result.placeholders}
     ph = by_name["cadre photo"]
@@ -43,7 +44,9 @@ def test_layer_named_frame_promoted(idml_path, fonts):
         "cadre photo": ImageValue(image=Image.new("RGB", (200, 200), (10, 160, 10))),
     }, fonts=fonts, pages=[2])
     [(_, img)] = IdmlEngine().render(idml_path, ctx)
-    r, g, b, a = img.getpixel((80, 333))  # dans le cadre (20..140, 210..290 pt)
+    r, g, b, a = img.getpixel((80, 333))  # 1er cadre (20..140, 210..290 pt)
+    assert g > 120 and r < 80
+    r, g, b, a = img.getpixel((493, 53))  # 2e cadre du même calque (340..400, 10..70 pt)
     assert g > 120 and r < 80
 
 
