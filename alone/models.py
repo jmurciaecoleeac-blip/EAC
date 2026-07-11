@@ -68,6 +68,7 @@ class ValueSpec(BaseModel):
     color: Optional[str] = None  # texte : couleur CSS hex, ex. "#FF0000"
     align: Optional[Literal["left", "center", "right"]] = None
     size: Optional[float] = None  # texte : force la taille de police (pt/px)
+    font: Optional[str] = None  # texte : force la famille de police (ex. "Cabinet Grotesk")
 
 
 RenderValue = Union[str, ValueSpec]
@@ -111,6 +112,7 @@ class TextValue:
     color: Optional[str] = None
     align: Optional[str] = None
     size: Optional[float] = None
+    font: Optional[str] = None
 
 
 @dataclass

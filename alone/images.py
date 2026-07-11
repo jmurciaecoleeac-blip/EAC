@@ -108,7 +108,8 @@ def resolve_values(
                 if spec.text is None:
                     raise ValueError_(f"{name!r} est un placeholder texte : champ 'text' requis")
                 resolved[name] = TextValue(text=spec.text, color=spec.color,
-                                           align=spec.align, size=spec.size)
+                                           align=spec.align, size=spec.size,
+                                           font=spec.font)
             else:
                 resolved[name] = TextValue(text=str(raw))
         else:  # image

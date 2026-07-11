@@ -85,6 +85,10 @@
   .asset .aname { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
   .asset .adims { color: var(--ink-soft); font-family: var(--mono); font-size: .72rem; }
   .asset button { padding: .15rem .5rem; font-size: .72rem; }
+  .styleopts { margin-top: .3rem; }
+  .styleopts summary { cursor: pointer; color: var(--ink-soft); font-size: .76rem; }
+  .stylerow { display: flex; gap: .4rem; flex-wrap: wrap; margin-top: .4rem; }
+  .stylerow input, .stylerow select { flex: 1; min-width: 90px; font-size: .82rem; }
   .imgfield { display: flex; gap: .4rem; }
   .imgfield input { flex: 1; }
   .imgfield button { white-space: nowrap; }
@@ -158,6 +162,8 @@
     </section>
   </div>
 </main>
+
+<datalist id="fontlist"></datalist>
 
 <script>
 "use strict";
@@ -331,6 +337,21 @@ function selectTemplate(t) {
       div.append(label, wrap);
     } else {
       div.append(label, input);
+      const opts = document.createElement("details");
+      opts.className = "styleopts";
+      opts.innerHTML = `<summary>style (optionnel)</summary>
+        <div class="stylerow">
+          <input data-role="font" list="fontlist" placeholder="police (ex. Cabinet Grotesk)">
+          <input data-role="size" type="number" min="4" step="0.5" placeholder="taille">
+          <input data-role="color" placeholder="#couleur" maxlength="9">
+          <select data-role="align">
+            <option value="">alignement d'origine</option>
+            <option value="left">gauche</option>
+            <option value="center">centré</option>
+            <option value="right">droite</option>
+          </select>
+        </div>`;
+      div.append(opts);
     }
     form.appendChild(div);
   }
@@ -346,7 +367,20 @@ async function doRender() {
   out.innerHTML = "";
   const data = {};
   for (const input of $("renderform").querySelectorAll("[data-name]")) {
-    if (input.value.trim()) data[input.dataset.name] = input.value.trim();
+    const raw = input.value.trim();
+    if (!raw) continue;
+    if (input.dataset.type === "text") {
+      const style = {};
+      const field = input.closest(".field");
+      for (const opt of field.querySelectorAll("[data-role]")) {
+        const v = opt.value.trim();
+        if (v) style[opt.dataset.role] = opt.dataset.role === "size" ? parseFloat(v) : v;
+      }
+      data[input.dataset.name] = Object.keys(style).length
+        ? Object.assign({ text: raw }, style) : raw;
+    } else {
+      data[input.dataset.name] = raw;
+    }
   }
   const body = {
     data,
@@ -464,6 +498,13 @@ async function loadFonts() {
     const names = Object.entries(data.families)
       .map(([fam, styles]) => `${fam} (${styles.join(", ")})`).sort();
     $("famlist").textContent = names.join(" · ") || "Aucune police déposée.";
+    const dl = $("fontlist");
+    dl.innerHTML = "";
+    for (const fam of Object.keys(data.families).sort()) {
+      const opt = document.createElement("option");
+      opt.value = fam;
+      dl.appendChild(opt);
+    }
   } catch (err) {
     $("famlist").textContent = "";
   }

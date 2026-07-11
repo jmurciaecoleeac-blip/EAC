@@ -71,3 +71,35 @@ def test_multiline_text(svg_path, fonts):
     ctx = RenderContext(values={"titre": TextValue(text="Ligne 1\nLigne 2")}, fonts=fonts)
     [(_, img)] = SvgEngine().render(svg_path, ctx)
     assert img.size == (400, 300)
+
+
+def test_set_text_reuses_styled_tspans(fonts, tmp_path):
+    """Chaque ligne du nouveau texte reprend le tspan (donc le style) d'origine."""
+    svg = """<svg xmlns="http://www.w3.org/2000/svg" width="200" height="100">
+      <text id="_x7B__x7B_bloc_x7D__x7D_" text-anchor="middle">
+        <tspan x="100" y="30" font-family="Arial" font-weight="bold" font-size="20">GRAS</tspan>
+        <tspan x="100" y="60" font-family="Georgia" font-size="14">LEGER</tspan>
+      </text>
+    </svg>"""
+    path = tmp_path / "t.svg"
+    path.write_text(svg)
+
+    from alone.engines.svg_engine import _SvgDoc
+    from alone.engines.base import RenderContext as RC
+
+    doc = _SvgDoc(path.read_bytes(), 1, "t.svg")
+    ctx = RC(values={"bloc": TextValue(text="TITRE\nSous-titre")}, fonts=fonts)
+    doc.apply(ctx)
+    tspans = [c for c in doc.tree.iter("{http://www.w3.org/2000/svg}tspan")]
+    assert [t.text for t in tspans] == ["TITRE", "Sous-titre"]
+    assert tspans[0].get("font-family") == "Arial"
+    assert tspans[1].get("font-family") == "Georgia"
+
+    # option font explicite : les font-family des tspans sont neutralisées
+    doc2 = _SvgDoc(path.read_bytes(), 1, "t.svg")
+    ctx2 = RC(values={"bloc": TextValue(text="A\nB", font="DejaVu Sans")}, fonts=fonts)
+    doc2.apply(ctx2)
+    text_el = next(doc2.tree.iter("{http://www.w3.org/2000/svg}text"))
+    assert "DejaVu Sans" in (text_el.get("font-family") or "")
+    for t in text_el:
+        assert t.get("font-family") is None

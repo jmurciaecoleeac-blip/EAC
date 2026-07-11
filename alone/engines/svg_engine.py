@@ -219,7 +219,13 @@ class _SvgDoc:
             setattr(node, attr, new)
 
     def _set_text(self, text_el, value: TextValue) -> None:
-        """Remplace tout le contenu d'un <text> nommé, en gardant le style."""
+        """Remplace tout le contenu d'un <text> nommé, en gardant le style.
+
+        La ligne N du nouveau texte réutilise le tspan N d'origine, donc sa
+        police, son corps et sa position propres (titre gras + sous-titre
+        dans une autre fonte restent fidèles). Les options explicites de la
+        valeur (font/size/color/align) priment sur tout.
+        """
         tspans = [c for c in text_el if _localname(c) == "tspan"]
         lines = value.text.split("\n")
 
@@ -228,12 +234,25 @@ class _SvgDoc:
             self._set_style(text_el, "fill", f"#{r:02x}{g:02x}{b:02x}")
         if value.size:
             self._set_style(text_el, "font-size", f"{value.size}px")
+        if value.font:
+            self._set_style(text_el, "font-family", value.font)
         if value.align:
             anchor = {"left": "start", "center": "middle", "right": "end"}[value.align]
             self._set_style(text_el, "text-anchor", anchor)
+        if value.font or value.size or value.color:
+            # les styles hérités doivent pouvoir être écrasés sur les tspans
+            for t in tspans:
+                for prop, on in (("font-family", value.font), ("font-size", value.size),
+                                 ("fill", value.color)):
+                    if on:
+                        for holder in (t.attrib, ):
+                            holder.pop(prop, None)
+                        style = t.get("style")
+                        if style:
+                            t.set("style", re.sub(rf"{prop}\s*:[^;]*;?", "", style))
 
         font_size = self._font_size_of(text_el) or 16.0
-        line_height = font_size * 1.2
+        line_height = (value.size or font_size) * 1.2
 
         if not tspans:
             text_el.text = lines[0]
@@ -250,25 +269,31 @@ class _SvgDoc:
                 extra.text = line
             return
 
-        model = tspans[0]
-        for extra_tspan in tspans[1:]:
-            text_el.remove(extra_tspan)
         text_el.text = None
-        model.text = lines[0]
-        for c in list(model):
-            model.remove(c)
-        base_y = _parse_length(model.get("y"))
-        model_size = self._font_size_of(model) or font_size
-        for i, line in enumerate(lines[1:], start=1):
-            clone = etree.SubElement(text_el, f"{{{SVG_NS}}}tspan")
-            for k, v in model.attrib.items():
-                clone.set(k, v)
-            if base_y is not None:
-                clone.set("y", str(base_y + i * model_size * 1.2))
+        used = []
+        for i, line in enumerate(lines):
+            if i < len(tspans):
+                target = tspans[i]
             else:
-                clone.set("x", model.get("x", "0"))
-                clone.set("dy", str(model_size * 1.2))
-            clone.text = line
+                # plus de lignes que de tspans : on prolonge depuis le dernier
+                model = used[-1]
+                target = etree.SubElement(text_el, f"{{{SVG_NS}}}tspan")
+                for k, v in model.attrib.items():
+                    target.set(k, v)
+                base_y = _parse_length(model.get("y"))
+                model_size = self._font_size_of(model) or font_size
+                if base_y is not None:
+                    target.set("y", str(base_y + model_size * 1.2))
+                else:
+                    target.set("x", model.get("x", "0"))
+                    target.set("dy", str(model_size * 1.2))
+            for c in list(target):
+                target.remove(c)
+            target.text = line
+            target.tail = None
+            used.append(target)
+        for extra_tspan in tspans[len(lines):]:
+            text_el.remove(extra_tspan)
 
     def _font_size_of(self, el) -> float | None:
         for node in (el, el.getparent()):

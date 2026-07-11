@@ -685,16 +685,28 @@ class IdmlEngine(Engine):
             self._draw_paragraphs(draw, paras, box, ctx, s)
 
     def _override_paragraphs(self, paras: list[_Paragraph], value: TextValue) -> list[_Paragraph]:
-        model = next((r for p in paras for r in p.runs), _Run(""))
-        align = value.align or next((p.align for p in paras if p.runs), "left")
-        size = value.size or model.size
-        color = parse_color(value.color, default=model.color)
+        """Remplace le texte d'un bloc en conservant la mise en forme d'origine.
+
+        La ligne N du nouveau texte reprend le style du paragraphe N du bloc
+        d'origine (police, corps, couleur, alignement) — un titre gras suivi
+        d'un sous-titre dans une autre fonte restent donc fidèles. Les options
+        explicites de la valeur (font/size/color/align) priment sur tout.
+        """
+        styled = [p for p in paras if p.runs]
         out = []
-        for line in value.text.split("\n"):
+        for i, line in enumerate(value.text.split("\n")):
+            src = styled[min(i, len(styled) - 1)] if styled else _Paragraph()
+            model = src.runs[0] if src.runs else _Run("")
             out.append(_Paragraph(
-                runs=[_Run(line, size, color, model.font, model.font_style)],
-                align=align,
-                leading=None,
+                runs=[_Run(
+                    line,
+                    value.size or model.size,
+                    parse_color(value.color, default=model.color),
+                    value.font or model.font,
+                    None if value.font else model.font_style,
+                )],
+                align=value.align or (src.align if src.runs else "left"),
+                leading=src.leading,
             ))
         return out
 
