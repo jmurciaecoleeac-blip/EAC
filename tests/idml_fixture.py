@@ -63,6 +63,12 @@ SPREAD2 = """<?xml version="1.0" encoding="UTF-8"?>
       <PathPointType Anchor="360 150"/><PathPointType Anchor="0 150"/>
     </PathPointArray></GeometryPathType></PathGeometry>
   </TextFrame>
+  <TextFrame Self="tf3" Name="Texte nom Sortie" ParentStory="u12" ItemTransform="1 0 0 1 -180 80">
+    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
+      <PathPointType Anchor="0 0"/><PathPointType Anchor="360 0"/>
+      <PathPointType Anchor="360 40"/><PathPointType Anchor="0 40"/>
+    </PathPointArray></GeometryPathType></PathGeometry>
+  </TextFrame>
   <Rectangle Self="r5" ItemLayer="lay_photo" ContentType="GraphicType" ItemTransform="1 0 0 1 140 -140">
     <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
       <PathPointType Anchor="0 0"/><PathPointType Anchor="60 0"/>
@@ -75,12 +81,6 @@ SPREAD2 = """<?xml version="1.0" encoding="UTF-8"?>
       <PathPointType Anchor="120 80"/><PathPointType Anchor="0 80"/>
     </PathPointArray></GeometryPathType></PathGeometry>
   </Rectangle>
-  <TextFrame Self="tf3" Name="Texte nom Sortie" ParentStory="u12" ItemTransform="1 0 0 1 -180 80">
-    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
-      <PathPointType Anchor="0 0"/><PathPointType Anchor="360 0"/>
-      <PathPointType Anchor="360 40"/><PathPointType Anchor="0 40"/>
-    </PathPointArray></GeometryPathType></PathGeometry>
-  </TextFrame>
  </Spread>
 </idPkg:Spread>"""
 

@@ -47,6 +47,7 @@
   .tpl { padding: .6rem .7rem; border: 1px solid var(--line); border-radius: 6px; margin-bottom: .55rem; cursor: pointer; background: var(--panel-2); }
   .tpl:hover, .tpl.active { border-color: var(--gold); }
   .tpl .name { font-weight: 600; }
+  .tpl .tpl-del { float: right; padding: 0 .45rem; font-size: .75rem; }
   .tpl .meta { font-size: .78rem; color: var(--ink-soft); font-family: var(--mono); }
   .badge {
     display: inline-block; font-size: .68rem; font-family: var(--mono); letter-spacing: .05em;
@@ -198,12 +199,29 @@ async function loadTemplates() {
       const div = document.createElement("div");
       div.className = "tpl" + (currentTemplate && currentTemplate.id === t.id ? " active" : "");
       div.innerHTML = `<span class="badge"></span><span class="name"></span>
+        <button type="button" class="ghost tpl-del" title="supprimer ce template">✕</button>
         <div class="meta"></div>`;
       div.querySelector(".badge").textContent = t.format;
       div.querySelector(".name").textContent = t.name;
       div.querySelector(".meta").textContent =
         `${t.pages} page(s) · ${t.placeholders.length} zone(s) · ${t.id}`;
       div.addEventListener("click", () => selectTemplate(t));
+      div.querySelector(".tpl-del").addEventListener("click", async (e) => {
+        e.stopPropagation();
+        if (!confirm(`Supprimer le template « ${t.name} » ?`)) return;
+        try {
+          await api(`/v1/templates/${t.id}`, { method: "DELETE" });
+          if (currentTemplate && currentTemplate.id === t.id) {
+            currentTemplate = null;
+            $("detail").hidden = true;
+            $("renderer").hidden = true;
+            $("empty").hidden = false;
+          }
+          loadTemplates();
+        } catch (err) {
+          alert(err.message);
+        }
+      });
       list.appendChild(div);
     }
   } catch (err) {
