@@ -17,6 +17,18 @@ def test_inspect(idml_path):
     assert by_name["photo"].bbox.width == 180
     assert by_name["prenom"].type == "text"
     assert by_name["prenom"].page == 2
+    # bloc nommé sans {{...}} : promu placeholder automatiquement
+    auto = by_name["Texte nom Sortie"]
+    assert auto.type == "text" and auto.page == 2
+    assert auto.hints["auto"] is True
+    assert any("Texte nom Sortie" in w for w in result.warnings)
+
+
+def test_render_auto_named_frame(idml_path, fonts):
+    ctx = RenderContext(values={"Texte nom Sortie": TextValue(text="Nouveau contenu")},
+                        fonts=fonts, pages=[2])
+    [(_, img)] = IdmlEngine().render(idml_path, ctx)
+    assert img.size == (533, 400)
 
 
 def test_render_pages_and_colors(idml_path, fonts):

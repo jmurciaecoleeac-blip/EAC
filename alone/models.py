@@ -9,14 +9,16 @@ from typing import Literal, Optional, Union
 from PIL import Image
 from pydantic import BaseModel, Field
 
-# Convention de nommage des zones éditables dans Adobe : {{nom}}
-PLACEHOLDER_RE = re.compile(r"\{\{\s*([A-Za-z0-9_.\-]+)\s*\}\}")
+# Convention de nommage des zones éditables dans Adobe : {{nom}}.
+# Le nom est libre (espaces et accents acceptés : {{Texte nom Sortie}},
+# {{prénom}}…) ; seules les accolades sont interdites à l'intérieur.
+PLACEHOLDER_RE = re.compile(r"\{\{([^{}]+?)\}\}")
 
 
 def find_placeholder_name(raw: str) -> Optional[str]:
     """Extrait le nom d'un placeholder depuis un nom de calque/objet."""
     m = PLACEHOLDER_RE.search(raw or "")
-    return m.group(1) if m else None
+    return m.group(1).strip() if m else None
 
 
 PlaceholderType = Literal["text", "image"]
