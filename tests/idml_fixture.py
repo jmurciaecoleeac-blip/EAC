@@ -4,6 +4,8 @@ import zipfile
 DESIGNMAP = """<?xml version="1.0" encoding="UTF-8"?>
 <Document xmlns:idPkg="http://ns.adobe.com/AdobeInDesign/idml/1.0/packaging" Self="d">
   <idPkg:Graphic src="Resources/Graphic.xml"/>
+  <Layer Self="lay_deco" Name="voile bleu"/>
+  <Layer Self="lay_photo" Name="cadre photo"/>
   <idPkg:Story src="Stories/Story_u10.xml"/>
   <idPkg:Story src="Stories/Story_u11.xml"/>
   <idPkg:Story src="Stories/Story_u12.xml"/>
@@ -35,6 +37,13 @@ SPREAD1 = """<?xml version="1.0" encoding="UTF-8"?>
     </PathPointArray></GeometryPathType></PathGeometry>
     <Image Self="img1"><Link Self="l1" LinkResourceURI="file:/Users/x/photo.jpg"/></Image>
   </Rectangle>
+  <Rectangle Self="r4" ItemLayer="lay_deco" FillColor="Color/Bleu" ItemTransform="1 0 0 1 -200 -150">
+    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
+      <PathPointType Anchor="200 200"/><PathPointType Anchor="400 200"/>
+      <PathPointType Anchor="400 260"/><PathPointType Anchor="200 260"/>
+    </PathPointArray></GeometryPathType></PathGeometry>
+    <TransparencySetting><BlendingSetting Opacity="50"/></TransparencySetting>
+  </Rectangle>
   <TextFrame Self="tf1" Name="{{titre}}" ParentStory="u10" ItemTransform="1 0 0 1 -190 -140">
     <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
       <PathPointType Anchor="0 0"/><PathPointType Anchor="380 0"/>
@@ -54,6 +63,12 @@ SPREAD2 = """<?xml version="1.0" encoding="UTF-8"?>
       <PathPointType Anchor="360 150"/><PathPointType Anchor="0 150"/>
     </PathPointArray></GeometryPathType></PathGeometry>
   </TextFrame>
+  <Rectangle Self="r3" ItemLayer="lay_photo" ContentType="GraphicType" ItemTransform="1 0 0 1 -180 60">
+    <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
+      <PathPointType Anchor="0 0"/><PathPointType Anchor="120 0"/>
+      <PathPointType Anchor="120 80"/><PathPointType Anchor="0 80"/>
+    </PathPointArray></GeometryPathType></PathGeometry>
+  </Rectangle>
   <TextFrame Self="tf3" Name="Texte nom Sortie" ParentStory="u12" ItemTransform="1 0 0 1 -180 80">
     <PathGeometry><GeometryPathType PathOpen="false"><PathPointArray>
       <PathPointType Anchor="0 0"/><PathPointType Anchor="360 0"/>
