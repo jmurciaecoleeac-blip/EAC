@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "areopage"
+version = "0.2.0"
+description = "Aréopage — conseil d'agents pour l'analyse contradictoire de documents (fondation technique V0.2)"
+readme = "README.md"
+requires-python = ">=3.13"
+license = { text = "Proprietary" }
+dependencies = [
+    "pydantic>=2.7,<3",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0",
+]
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-q"
